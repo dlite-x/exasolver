@@ -1,0 +1,1467 @@
+<!doctype html>
+<html lang="en">
+<title>AI Value Chain</title>
+<meta name="description" content="How the AI industry fits together, from chip tools to apps: an interactive value chain map, live inference prices, a world map of AI campuses, energy and water figures, and quizzes.">
+<link rel="canonical" href="https://exasolver.com/">
+<meta property="og:title" content="AI Value Chain">
+<meta property="og:description" content="How the AI industry fits together, from chip tools to apps: an interactive value chain map, live inference prices, a world map of AI campuses, energy and water figures, and quizzes.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://exasolver.com/">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="map.css">
+<style>
+  html { -webkit-text-size-adjust: 100%; } img { max-width: 100%; }
+  /* Layout: a sticky masthead with tabs; each tab is a reading column (~68ch) that widens for charts and company directories. */
+  :root {
+    --bg: #f2f4f7; --canvas: #f8f9fb; --surface: #ffffff; --surface-2: #e8ebf0;
+    --ink: #111419; --ink-2: #3c4350; --muted: #687180;
+    --line: #d4d9e0; --edge: #a9b1bc; --accent: #3346c9; --accent-soft: #e2e6fb;
+    --money: #2b8a3e; --money-soft: #dcf5e1;
+    --c0: #a9b1bc; --c1: #d9a800; --c2: #ec8a00; --c3: #e1561a; --c4: #cf2f68;
+    --s1: #2a78d6; --s2: #eb6834; --s3: #1baf7a; --s4: #eda100; --s5: #e87ba4;
+    --an-skin: #f0d8c6; --an-bone: #ece6d6; --an-dura: #cdbfd8; --an-csf: #dcebf7; --an-cortex: #f4d0cf; --an-wm: #fbeeea; --an-vessel: #8f8fe0; --an-neuron: #b98f8e; --an-ink: #5b5148;
+    --shadow: 0 1px 2px rgba(17,20,25,.05), 0 8px 24px rgba(17,20,25,.08);
+    --font-display: "Archivo", "Helvetica Neue", Arial, sans-serif;
+    --font-body: "IBM Plex Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+    --font-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Consolas, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0f1114; --canvas: #14171b; --surface: #1b1f24; --surface-2: #252a31;
+      --ink: #e9ecef; --ink-2: #c0c6ce; --muted: #8a929d;
+      --line: #2f353d; --edge: #4a525c; --accent: #8e9bff; --accent-soft: #232a52;
+      --money: #5bd37a; --money-soft: #17361f;
+      --c0: #4a525c; --c1: #f2c94c; --c2: #ffa94d; --c3: #ff7a45; --c4: #ff5c8a;
+      --s1: #3987e5; --s2: #d95926; --s3: #199e70; --s4: #c98500; --s5: #d55181;
+      --an-skin: #4f3f33; --an-bone: #4d4a42; --an-dura: #453d52; --an-csf: #213544; --an-cortex: #55373b; --an-wm: #3a2c2c; --an-vessel: #7474c9; --an-neuron: #8a6163; --an-ink: #c9c0b6;
+      --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.4);
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0f1114; --canvas: #14171b; --surface: #1b1f24; --surface-2: #252a31;
+    --ink: #e9ecef; --ink-2: #c0c6ce; --muted: #8a929d;
+    --line: #2f353d; --edge: #4a525c; --accent: #8e9bff; --accent-soft: #232a52;
+    --money: #5bd37a; --money-soft: #17361f;
+    --c0: #4a525c; --c1: #f2c94c; --c2: #ffa94d; --c3: #ff7a45; --c4: #ff5c8a;
+    --s1: #3987e5; --s2: #d95926; --s3: #199e70; --s4: #c98500; --s5: #d55181;
+      --an-skin: #4f3f33; --an-bone: #4d4a42; --an-dura: #453d52; --an-csf: #213544; --an-cortex: #55373b; --an-wm: #3a2c2c; --an-vessel: #7474c9; --an-neuron: #8a6163; --an-ink: #c9c0b6;
+    --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.4);
+    color-scheme: dark;
+  }
+
+  * { box-sizing: border-box; }
+  [hidden] { display: none !important; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font: 16px/1.6 var(--font-body);
+  }
+  body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 25; background: var(--surface); }
+  a { color: var(--accent); }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  .gutter { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+
+  /* Masthead */
+  .mast { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20; background: var(--surface); border-bottom: 1px solid var(--line); }
+  .mast-in { max-width: 1180px; margin: 0 auto; display: flex; flex-wrap: wrap; align-items: center; gap: 6px 28px; padding-block: 12px; }
+  .logo { font-family: var(--font-display); font-weight: 800; font-size: 17px; letter-spacing: -.01em; color: var(--ink); text-decoration: none; display: flex; align-items: center; gap: 10px; }
+  .logo svg { flex: none; }
+  nav { display: flex; flex-wrap: wrap; gap: 2px; }
+  nav a {
+    font-size: 14px; font-weight: 500; color: var(--ink-2); text-decoration: none;
+    padding: 6px 11px; border-radius: 7px;
+  }
+  nav a:hover { background: var(--surface-2); color: var(--ink); }
+  nav a[aria-current="page"] { background: var(--ink); color: var(--surface); }
+
+  /* Views */
+  .view { padding-block: 40px 64px; }
+  .col { max-width: 1180px; margin: 0 auto; display: flex; flex-direction: column; gap: 28px; }
+  .read { max-width: 68ch; }
+  .eyebrow { font-family: var(--font-mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin: 0 0 10px; }
+  h1, h2, h3 { font-family: var(--font-display); text-wrap: balance; margin: 0; }
+  h1 { font-size: clamp(30px, 5vw, 48px); line-height: 1.06; font-weight: 800; letter-spacing: -.02em; max-width: 22ch; }
+  h2 { font-size: 24px; line-height: 1.2; font-weight: 700; letter-spacing: -.01em; }
+  h3 { font-size: 17px; line-height: 1.3; font-weight: 700; }
+  p { margin: 0; }
+  .lede { font-size: 19px; line-height: 1.55; color: var(--ink-2); margin-top: 16px; max-width: 62ch; }
+  .prose { display: flex; flex-direction: column; gap: 14px; color: var(--ink-2); max-width: 68ch; }
+  .prose b { color: var(--ink); font-weight: 600; }
+  section { display: flex; flex-direction: column; gap: 16px; }
+  .num { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+
+  /* Steps: the chain is a real sequence, so it is numbered */
+  .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; padding: 0; margin: 0; list-style: none; counter-reset: step; }
+  .steps li {
+    counter-increment: step; background: var(--surface); border: 1px solid var(--line); border-radius: 10px;
+    padding: 16px; display: flex; flex-direction: column; gap: 8px; min-width: 0;
+  }
+  .steps li::before { content: counter(step, decimal-leading-zero); font-family: var(--font-mono); font-size: 12px; color: var(--muted); }
+  .steps h3 { font-size: 16px; }
+  .steps p { font-size: 14.5px; color: var(--ink-2); line-height: 1.5; }
+  .steps a { font-size: 14px; font-weight: 500; margin-top: auto; }
+  .steps .ph { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 7px; vertical-align: 1px; }
+
+  /* Stat row */
+  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 12px; }
+  .stat { border-top: 2px solid var(--ink); padding-top: 10px; display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+  .stat .v { font-family: var(--font-mono); font-size: 26px; font-weight: 500; letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
+  .stat .k { font-size: 14px; color: var(--ink-2); line-height: 1.45; }
+
+  /* Bar charts */
+  .chart { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 20px; display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+  .chart-head { display: flex; flex-direction: column; gap: 4px; }
+  .chart-head p { font-size: 14px; color: var(--muted); }
+  .legend-row { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: 13px; color: var(--ink-2); }
+  .legend-row span { display: inline-flex; align-items: center; gap: 6px; }
+  .legend-row i { width: 10px; height: 10px; border-radius: 3px; }
+  .bars { display: grid; grid-template-columns: minmax(96px, max-content) 1fr; gap: 6px 14px; align-items: center; }
+  .bars .lab { font-size: 14px; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .bars .lab small { color: var(--muted); font-size: 12px; margin-left: 4px; }
+  .btrack { display: flex; align-items: center; gap: 8px; min-width: 0; cursor: default; border-radius: 4px; }
+  .btrack:hover .bfill, .btrack:focus-visible .bfill { filter: brightness(1.12); }
+  .bfill { height: 14px; border-radius: 0 4px 4px 0; min-width: 2px; flex: none; }
+  .bfill.s1 { background: var(--s1); } .bfill.s2 { background: var(--s2); } .bfill.s3 { background: var(--s3); }
+  .val { font-family: var(--font-mono); font-size: 13px; color: var(--ink-2); white-space: nowrap; font-variant-numeric: tabular-nums; }
+  .chart-foot { font-size: 13px; color: var(--muted); }
+  details.tbl summary { font-size: 13px; color: var(--accent); cursor: pointer; width: max-content; }
+  .tblwrap { overflow-x: auto; margin-top: 10px; }
+  table { border-collapse: collapse; font-size: 13.5px; width: 100%; }
+  th, td { text-align: left; padding: 6px 10px 6px 0; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { font-weight: 600; color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: .05em; }
+  td.r, th.r { text-align: right; font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+  #ctip {
+    position: fixed; z-index: 60; pointer-events: none; max-width: 260px; background: var(--surface); color: var(--ink);
+    border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; box-shadow: var(--shadow); font-size: 13px; line-height: 1.4;
+  }
+  #ctip b { display: block; }
+  #ctip .num { color: var(--ink-2); }
+
+  /* Callout: one key comparison */
+  .callout { border-left: 3px solid var(--accent); padding: 4px 0 4px 18px; font-size: 18px; line-height: 1.5; color: var(--ink); max-width: 64ch; }
+
+  /* Chokepoints list */
+  .chokes { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 10px; }
+  .choke { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; display: grid; grid-template-columns: 6px 1fr; gap: 4px 12px; min-width: 0; }
+  .choke i { grid-row: 1 / 3; border-radius: 3px; }
+  .choke b { font-family: var(--font-display); font-size: 15px; }
+  .choke span { font-size: 14px; color: var(--ink-2); line-height: 1.45; }
+
+  /* Company directory */
+  .dir { columns: 3 280px; column-gap: 12px; }
+  .dir-card { break-inside: avoid; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; margin-bottom: 12px; display: flex; flex-direction: column; gap: 8px; }
+  .dir-card h3 { font-size: 15px; display: flex; justify-content: space-between; gap: 8px; }
+  .dir-card h3 .num { font-size: 12px; color: var(--muted); font-weight: 400; }
+  .dir-card > p { font-size: 13px; color: var(--muted); line-height: 1.4; }
+  .dir-card ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 5px; }
+  .dir-card li { display: grid; grid-template-columns: 9px 1fr; gap: 0 8px; align-items: baseline; font-size: 14px; line-height: 1.35; }
+  .dir-card li i { width: 8px; height: 8px; border-radius: 50%; }
+  .dir-card li small { grid-column: 2; font-size: 12px; color: var(--muted); font-family: var(--font-mono); }
+  .regkey { display: flex; flex-wrap: wrap; gap: 4px 14px; font-size: 13px; color: var(--ink-2); }
+  .regkey span { display: inline-flex; align-items: center; gap: 6px; }
+  .regkey i { width: 8px; height: 8px; border-radius: 50%; }
+
+  .roles { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 12px; }
+  .role { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 16px; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+  .role p { font-size: 14.5px; color: var(--ink-2); line-height: 1.5; }
+  .role .ex { font-size: 13px; color: var(--muted); }
+
+  .next { display: flex; flex-wrap: wrap; gap: 10px; }
+  .next a { font-weight: 500; text-decoration: none; border: 1px solid var(--line); background: var(--surface); padding: 9px 14px; border-radius: 8px; }
+  .next a:hover { border-color: var(--accent); }
+
+  /* Map tab */
+  .mapview { padding-block: 16px 16px; }
+  .mapbar { max-width: none; display: flex; flex-wrap: wrap; gap: 10px 24px; align-items: center; justify-content: space-between; }
+  .mapbar p { color: var(--ink-2); font-size: 15px; max-width: 60ch; }
+  .mapview .legends { padding: 10px 0 10px; }
+  .mapview .stage { height: calc(100vh - 230px); min-height: 520px; margin: 0; }
+  .mapview .toggle, .mapview .search input { font-family: var(--font-body); }
+  .mapview svg text { font-family: var(--font-body); }
+
+  /* Shared control chips (world map, 3D model) */
+  .ctrlbar { display: flex; flex-wrap: wrap; gap: 8px 18px; align-items: center; }
+  .seg { display: flex; flex-wrap: wrap; gap: 4px; }
+  .chip {
+    font: 500 13px/1 var(--font-body); color: var(--ink-2); cursor: pointer; display: inline-flex; align-items: center; gap: 7px;
+    padding: 7px 11px; border-radius: 7px; border: 1px solid var(--line); background: var(--surface);
+  }
+  .chip:hover { border-color: var(--edge); color: var(--ink); }
+  .chip[aria-pressed="true"] { border-color: var(--ink); color: var(--ink); background: var(--surface-2); }
+  .chip[aria-pressed="false"] i { opacity: .35; }
+  .chip i { width: 10px; height: 10px; border-radius: 50%; flex: none; }
+  .k-operating { background: var(--s2); }
+  .k-building { background: color-mix(in srgb, var(--s2) 35%, transparent); box-shadow: inset 0 0 0 1.5px var(--s2); }
+  .k-planned { box-shadow: inset 0 0 0 1.5px var(--s2); }
+  .k-hub { background: color-mix(in srgb, var(--s1) 22%, transparent); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--s1) 60%, transparent); }
+  .keynote { font-size: 13px; color: var(--muted); line-height: 1.5; max-width: 90ch; }
+
+  /* World map */
+  .geo { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 20px; align-items: start; }
+  .geo-main { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+  .geo-stage { position: relative; background: var(--canvas); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+  #geoMap { display: block; width: 100%; height: auto; aspect-ratio: 2.15 / 1; cursor: grab; touch-action: none; user-select: none; }
+  #geoMap.panning { cursor: grabbing; }
+  #geoMap .land { fill: var(--surface-2); stroke: var(--canvas); stroke-width: .6; vector-effect: non-scaling-stroke; }
+  #geoMap .land.has { fill: color-mix(in srgb, var(--surface-2) 70%, var(--edge)); }
+  #geoMap .hub { fill: color-mix(in srgb, var(--s1) 18%, transparent); stroke: color-mix(in srgb, var(--s1) 55%, transparent); stroke-width: 1; vector-effect: non-scaling-stroke; }
+  #geoMap .hublab { fill: var(--ink-2); text-anchor: middle; font-family: var(--font-body); font-weight: 500; pointer-events: none; opacity: 0; transition: opacity .2s; paint-order: stroke; stroke: var(--canvas); stroke-width: 3px; stroke-linejoin: round; vector-effect: non-scaling-stroke; }
+  #geoMap.zoomed .hublab { opacity: 1; }
+  #geoMap.nohubs .g-hubs, #geoMap.nohubs .g-hublab { display: none; }
+  #geoMap .site { stroke: var(--s2); stroke-width: 1.5; vector-effect: non-scaling-stroke; cursor: pointer; outline: none; transition: opacity .15s; }
+  #geoMap .site.operating { fill: var(--s2); stroke: var(--canvas); stroke-width: 1.2; }
+  #geoMap .site.building { fill: color-mix(in srgb, var(--s2) 35%, var(--canvas)); }
+  #geoMap .site.planned { fill: var(--canvas); fill-opacity: .6; stroke-dasharray: 3 2; }
+  #geoMap.hovering .site:not(.hl) { opacity: .35; }
+  #geoMap .site.hl, #geoMap .site:focus-visible, #geoMap .site.sel { stroke: var(--ink); stroke-width: 2.2; stroke-dasharray: none; }
+  .geo-stage .zoom { left: auto; right: 12px; bottom: 12px; }
+  .geo-side { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+  .geo-sel { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 16px; display: flex; flex-direction: column; gap: 8px; font-size: 14.5px; color: var(--ink-2); line-height: 1.5; }
+  .geo-sel .eyebrow { margin: 0; font-size: 11px; }
+  .geo-sel h3 { color: var(--ink); }
+  .geo-place { color: var(--muted); font-size: 14px; margin-top: -6px; }
+  .geo-sel dl { display: grid; grid-template-columns: max-content 1fr; gap: 2px 12px; margin: 2px 0; font-size: 14px; }
+  .geo-sel dt { color: var(--muted); }
+  .geo-sel dd { margin: 0; color: var(--ink); }
+  .geo-rank { display: flex; flex-direction: column; gap: 10px; }
+  .geo-rank h3 { font-size: 15px; }
+  .geo-rank .bars { grid-template-columns: minmax(90px, 44%) 1fr; gap: 4px 10px; }
+  .geo-rank .lab { font-size: 13px; }
+  .geo-rank .lab.hl { color: var(--accent); }
+  .geo-rank .btrack { cursor: pointer; }
+  .geo-rank .btrack.hl .bfill { filter: brightness(1.15); }
+  .geo-rank .bfill { height: 12px; }
+  .bfill.st-building { background: color-mix(in srgb, var(--s2) 40%, transparent); box-shadow: inset 0 0 0 1.5px var(--s2); }
+  .bfill.st-planned { background: transparent; box-shadow: inset 0 0 0 1.5px var(--s2); }
+
+  /* Inside a data center (3D) */
+  .dc { display: grid; grid-template-columns: minmax(0, 1fr) 330px; gap: 20px; align-items: start; }
+  .dc-main { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+  .dc-stage { position: relative; height: min(68vh, 620px); min-height: 380px; background: var(--canvas); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+  .dc-stage canvas { display: block; cursor: grab; }
+  .dc-labels { position: absolute; inset: 0; pointer-events: none; }
+  .dc-label {
+    position: absolute; left: 0; top: 0; pointer-events: auto; cursor: pointer; white-space: nowrap;
+    font: 500 11.5px/1 var(--font-body); color: var(--ink); background: color-mix(in srgb, var(--surface) 88%, transparent);
+    border: 1px solid var(--line); border-radius: 999px; padding: 4px 8px; box-shadow: 0 1px 2px rgba(0,0,0,.08);
+  }
+  .dc-label.on { background: var(--accent); color: var(--surface); border-color: var(--accent); }
+  .dc-fallback { padding: 24px; color: var(--ink-2); max-width: 46ch; }
+  .dc-side { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+  .dc-card { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 16px; display: flex; flex-direction: column; gap: 9px; font-size: 14.5px; line-height: 1.5; color: var(--ink-2); }
+  .dc-card .eyebrow { margin: 0; font-size: 11px; }
+  .dc-card h3 { color: var(--ink); }
+  .dc-card b { color: var(--ink); font-weight: 600; }
+  .dc-fact { font-family: var(--font-mono); font-size: 13px; color: var(--ink); background: var(--surface-2); border-radius: 6px; padding: 7px 9px; }
+  .dc-who { display: flex; flex-direction: column; gap: 6px; }
+  .dc-who span { display: flex; flex-wrap: wrap; gap: 4px; }
+  .dc-who em { font-style: normal; font-size: 12.5px; border: 1px solid var(--line); border-radius: 999px; padding: 2px 8px; color: var(--ink-2); }
+  .dc-card a { font-size: 14px; font-weight: 500; }
+  .dc-list { display: grid; grid-template-columns: 1fr 1fr; gap: 12px 10px; }
+  .dc-group { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+  .dc-group .eyebrow { margin: 0 0 2px; font-size: 11px; }
+  .dc-item { font: 14px/1.3 var(--font-body); color: var(--ink-2); text-align: left; background: none; border: 0; border-radius: 6px; padding: 5px 6px; cursor: pointer; display: flex; gap: 8px; align-items: center; }
+  .dc-item:hover, .dc-item.hl { background: var(--surface-2); color: var(--ink); }
+  .dc-item[aria-pressed="true"] { background: var(--accent-soft); color: var(--ink); font-weight: 500; }
+  .dc-item i { width: 8px; height: 8px; border-radius: 2px; flex: none; }
+  .g-power { background: var(--c1); } .g-compute { background: var(--ink-2); } .g-cooling { background: var(--s1); } .g-building { background: var(--edge); }
+  @media (max-width: 960px) {
+    .geo, .dc { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 600px) {
+    #geoMap { aspect-ratio: 1.5 / 1; }
+    .dc-stage { height: 62vh; min-height: 340px; }
+  }
+
+  /* Environment: log dot plots (label | track | value) */
+  .convs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0 28px; border-top: 1px solid var(--edge); }
+  .convs div { padding-block: 12px; display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+  .convs b { font-family: var(--font-mono); font-weight: 500; font-size: 14.5px; }
+  .convs span { font-size: 13.5px; color: var(--ink-2); }
+  .envbar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; font-size: 14px; color: var(--ink-2); }
+  .envbar input[type="number"] { font: 500 14px/1 var(--font-mono); width: 6.2rem; padding: 7px 9px; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 7px; }
+  .envbar input[type="range"] { flex: 1 1 180px; max-width: 320px; accent-color: var(--accent); }
+  .envbar output { font: 500 15px/1 var(--font-mono); color: var(--ink); min-width: 3ch; text-align: right; }
+  .dp-legend { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 13px; color: var(--ink-2); }
+  .dp-legend span { display: inline-flex; align-items: center; gap: 7px; }
+  .dp-key { width: 10px; height: 10px; border-radius: 50%; flex: none; }
+  .dp-key.sq { border-radius: 3px; }
+  .dp-key.hol { background: var(--surface); border: 2px solid var(--ink-2); }
+  .dp-key.kw { width: 22px; height: 2px; border-radius: 1px; background: var(--ink-2); opacity: .55; }
+  .dp { display: flex; flex-direction: column; }
+  .dp-row, .dp-axis { display: grid; grid-template-columns: minmax(0, 17rem) minmax(0, 1fr) 4.6rem; column-gap: 14px; align-items: stretch; }
+  .dp-row { border-radius: 6px; outline-offset: -2px; }
+  .dp-row:hover, .dp-row:focus-visible { background: var(--surface-2); }
+  .dp-lab { padding: 6px 0 6px 6px; display: flex; flex-direction: column; min-width: 0; }
+  .dp-nm { font-size: 14px; font-weight: 500; line-height: 1.3; overflow-wrap: anywhere; }
+  .dp-sub { font-size: 12px; color: var(--muted); line-height: 1.35; overflow-wrap: anywhere; }
+  .dp-val { padding: 6px 6px 6px 0; text-align: right; font: 500 13.5px/1.3 var(--font-mono); font-variant-numeric: tabular-nums; align-self: center; white-space: nowrap; }
+  .dp-trk { position: relative; min-height: 34px; }
+  .dp-gl { position: absolute; top: 0; bottom: 0; width: 1px; background: var(--line); }
+  .dp-gl.base { background: var(--edge); }
+  .dp-whk { position: absolute; top: 50%; height: 2px; margin-top: -1px; border-radius: 1px; opacity: .5; }
+  .dp-dot { position: absolute; top: 50%; width: 10px; height: 10px; margin: -5px 0 0 -5px; border-radius: 50%; box-shadow: 0 0 0 2px var(--surface); }
+  .dp-dot.hol { background: var(--surface) !important; border: 2px solid; }
+  .k0 { background: var(--edge); border-color: var(--edge); }
+  .k1 { background: var(--s1); border-color: var(--s1); } .k2 { background: var(--s2); border-color: var(--s2); } .k3 { background: var(--s3); border-color: var(--s3); }
+  .dp-grp { font-size: 13px; font-weight: 600; color: var(--ink-2); padding: 14px 6px 5px; border-bottom: 1px solid var(--line); margin-bottom: 2px; }
+  .dp-grp small { font-weight: 400; color: var(--muted); font-size: 12px; }
+  .dp-axis .dp-trk { min-height: 22px; }
+  .dp-tick { position: absolute; top: 3px; font: 11.5px/1 var(--font-mono); color: var(--muted); transform: translateX(-50%); white-space: nowrap; }
+  .dp-tick.first { transform: none; } .dp-tick.last { transform: translateX(-100%); }
+  .dp-unit { font-size: 12px; color: var(--muted); padding: 3px 6px 0; }
+  .dp-unit.r { text-align: right; }
+  .dp-seg { position: absolute; top: 50%; height: 14px; margin-top: -7px; }
+  .dp-seg.a { background: var(--s4); } .dp-seg.b { background: var(--s5); border-radius: 0 4px 4px 0; } .dp-seg.a.end { border-radius: 0 4px 4px 0; }
+  .gaps { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 18px 32px; }
+  .gaps div { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+  .gaps p { font-size: 14.5px; color: var(--ink-2); line-height: 1.5; }
+  .srcs td:first-child { font-weight: 500; min-width: 11rem; }
+  @media (max-width: 680px) {
+    .convs { grid-template-columns: 1fr; } .convs div + div { border-top: 1px solid var(--line); }
+    .dp-row { grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "lab val" "trk trk"; padding-bottom: 4px; }
+    .dp-row .dp-lab { grid-area: lab; padding-bottom: 2px; } .dp-row .dp-val { grid-area: val; align-self: start; } .dp-row .dp-trk { grid-area: trk; min-height: 22px; margin-inline: 8px; }
+    .dp-axis { grid-template-columns: 1fr; } .dp-axis .dp-unit { display: none; } .dp-axis .dp-trk { margin-inline: 8px; }
+  }
+
+  /* Education */
+  .lv-tabs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+  .lv-tab { font: inherit; text-align: left; cursor: pointer; color: var(--ink-2); background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+  .lv-tab:hover { border-color: var(--edge); }
+  .lv-tab[aria-pressed="true"] { border-color: var(--ink); box-shadow: inset 0 0 0 1px var(--ink); color: var(--ink); }
+  .lv-n { font: 11px/1.2 var(--font-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+  .lv-tab b { font: 700 17px/1.2 var(--font-display); color: var(--ink); }
+  .lv-p { height: 4px; border-radius: 2px; background: var(--surface-2); overflow: hidden; margin-top: 6px; }
+  .lv-p i { display: block; height: 100%; background: var(--money); border-radius: 2px; transition: width .3s; }
+  .lv-c { font-size: 12.5px; color: var(--muted); }
+  .lv-blurb { color: var(--ink-2); font-size: 16px; }
+  .learn { display: flex; flex-direction: column; gap: 18px; max-width: 900px; }
+  .act { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 18px; display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+  .act header { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 12px; }
+  .act header h3 { font-size: 18px; flex: 1 1 auto; }
+  .act-topic { font: 11px/1 var(--font-mono); letter-spacing: .08em; text-transform: uppercase; padding: 4px 7px; border-radius: 5px; border: 1px solid var(--line); color: var(--ink-2); }
+  .act-topic.t-environment { border-color: var(--s3); }
+  .act-topic.t-diagram { border-color: var(--accent); }
+  .act-topic.t-numbers { border-color: var(--s2); }
+  .act-score { font: 12.5px/1 var(--font-mono); color: var(--muted); }
+  .act.solved .act-score { color: var(--money); }
+  .act-intro { color: var(--ink-2); font-size: 15px; max-width: 70ch; }
+  .act-body { display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+  .act-why { font-size: 14.5px; color: var(--ink-2); background: var(--surface-2); border-radius: 8px; padding: 9px 12px; line-height: 1.5; max-width: 76ch; }
+  .act-why b { color: var(--ink); }
+  .pz { display: flex; flex-direction: column; gap: 12px; background: var(--canvas); border: 1px solid var(--line); border-radius: 10px; padding: 14px; }
+  .pz-line { display: flex; flex-direction: column; gap: 6px; }
+  .pz-rowname { font: 11px/1 var(--font-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+  .pz-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 6px; }
+  .pz-box, .pz-slot { font: 500 14px/1.25 var(--font-body); border-radius: 8px; padding: 9px 12px; min-height: 40px; display: inline-flex; align-items: center; justify-content: center; text-align: center; }
+  .pz-box { background: var(--surface); border: 1px solid var(--edge); color: var(--ink); }
+  .pz-slot { cursor: pointer; background: transparent; border: 1.5px dashed var(--edge); color: var(--muted); min-width: 92px; }
+  .pz-slot.active { border-color: var(--accent); background: var(--accent-soft); color: var(--ink); }
+  .pz-slot.filled { border-style: solid; background: var(--surface); color: var(--ink); }
+  .pz-slot.ok { border-color: var(--money); background: var(--money-soft); color: var(--ink); }
+  .pz-slot.ok::before { content: "✓ "; white-space: pre; color: var(--money); }
+  .pz-slot.bad { border-color: var(--c4); background: color-mix(in srgb, var(--c4) 14%, var(--surface)); }
+  .pz-slot.bad::before { content: "✗ "; white-space: pre; color: var(--c4); }
+  .pz-slot:disabled { cursor: default; opacity: 1; }
+  .pz-arrow { color: var(--muted); display: inline-flex; flex-direction: column; align-items: center; gap: 1px; font-size: 16px; }
+  .pz-arrow i { font-style: normal; line-height: 1; }
+  .pz-slot.on-arrow { font-size: 12.5px; min-height: 30px; padding: 5px 9px; }
+  .pz-bank { display: flex; flex-wrap: wrap; gap: 6px; }
+  .pz-tile { font: 500 14px/1.25 var(--font-body); cursor: pointer; color: var(--ink); background: var(--surface); border: 1px solid var(--edge); border-radius: 8px; padding: 8px 12px; box-shadow: 0 1px 0 var(--line); }
+  .pz-tile:hover { border-color: var(--accent); }
+  .pz-tile:disabled { opacity: .3; cursor: default; box-shadow: none; }
+  .pz-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+  .pz-ctl .chip:disabled { opacity: .45; cursor: default; }
+  .pz-msg { font-size: 14px; color: var(--ink-2); }
+  .qz { border: 0; padding: 0; margin: 0; min-width: 0; display: flex; flex-direction: column; gap: 8px; }
+  .qz + .qz, .nm + .nm { border-top: 1px solid var(--line); padding-top: 14px; }
+  .qz legend, .nm-q { padding: 0; font-weight: 500; font-size: 15.5px; color: var(--ink); line-height: 1.4; }
+  .qz-n { font: 12px/1 var(--font-mono); color: var(--muted); margin-right: 9px; }
+  .qz-opts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; }
+  .qz-opt { font: 14.5px/1.35 var(--font-body); text-align: left; cursor: pointer; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 9px 12px; }
+  .qz-opt:hover:not(:disabled) { border-color: var(--accent); }
+  .qz-opt:disabled { cursor: default; color: var(--ink-2); }
+  .qz-opt.ok { border-color: var(--money); background: var(--money-soft); color: var(--ink); }
+  .qz-opt.ok::before { content: "✓ "; white-space: pre; color: var(--money); }
+  .qz-opt.bad { border-color: var(--c4); background: color-mix(in srgb, var(--c4) 14%, var(--surface)); }
+  .qz-opt.bad::before { content: "✗ "; white-space: pre; color: var(--c4); }
+  .nm { display: flex; flex-direction: column; gap: 8px; }
+  .nm-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+  .nm-row input { font: 500 15px/1 var(--font-mono); width: 8rem; padding: 8px 10px; color: var(--ink); background: var(--canvas); border: 1px solid var(--edge); border-radius: 7px; }
+  .nm-row input.ok { border-color: var(--money); } .nm-row input.bad { border-color: var(--c4); }
+  .nm-unit { font-size: 14px; color: var(--ink-2); }
+  .lv-foot { display: flex; flex-wrap: wrap; gap: 8px; }
+  @media (max-width: 600px) { .lv-tabs, .qz-opts { grid-template-columns: 1fr; } .act { padding: 14px; } }
+
+  /* Humans (coming soon) */
+  .soon { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; }
+  .soon-card { border: 1.5px dashed var(--edge); border-radius: 12px; padding: 18px; display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+  .soon-card .tag { font: 11px/1 var(--font-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+  .soon-card p { font-size: 15px; color: var(--ink-2); line-height: 1.5; }
+
+  /* Brain-computer interfaces */
+  .figwrap { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 16px; display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+  .figscroll { overflow-x: auto; }
+  .figcap { font-size: 13.5px; color: var(--muted); line-height: 1.5; max-width: 90ch; }
+  .figcap b { color: var(--ink-2); font-weight: 600; }
+  .bci-two { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 18px; align-items: start; }
+  #bciWhere svg { display: block; width: 100%; min-width: 600px; height: auto; border-radius: 8px; }
+  #bciWhere .band { font: 500 11px var(--font-body); fill: var(--an-ink); }
+  #bciWhere .neu { fill: var(--an-neuron); transition: fill .15s; }
+  #bciWhere .zone { opacity: 0; transition: opacity .2s; }
+  #bciWhere .zone.on { opacity: .3; }
+  #bciWhere .dev { cursor: pointer; outline: none; }
+  #bciWhere .dev .hit { fill: transparent; }
+  #bciWhere .dev .lead { stroke: var(--ink-2); stroke-width: 1; stroke-dasharray: 2 3; }
+  #bciWhere .dev .devlab { font: 600 13px var(--font-body); fill: var(--ink); text-anchor: middle; }
+  #bciWhere .dev .body, #bciWhere .dev .contact { fill: var(--ink-2); }
+  #bciWhere .dev .needle { stroke: var(--ink-2); stroke-width: 1.6; }
+  #bciWhere .dev .vessel { fill: var(--an-vessel); }
+  #bciWhere .dev .mesh { fill: none; stroke: var(--ink-2); stroke-width: 1.1; }
+  #bciWhere .dev.on .body, #bciWhere .dev.on .contact { fill: var(--dc); }
+  #bciWhere .dev.on .needle, #bciWhere .dev.on .mesh { stroke: var(--dc); }
+  #bciWhere .dev.on .devlab { fill: var(--dc); }
+  #bciWhere .dev:focus-visible .hit { stroke: var(--accent); stroke-width: 2; }
+  .bci-card { display: flex; flex-direction: column; gap: 8px; font-size: 14.5px; color: var(--ink-2); line-height: 1.5; min-width: 0; }
+  .bci-card .eyebrow { margin: 0; font-size: 11px; display: flex; align-items: center; gap: 7px; }
+  .bci-card .eyebrow i, .sortkey i { width: 10px; height: 10px; border-radius: 3px; flex: none; }
+  .bci-card h3 { color: var(--ink); }
+  .bci-card dl { display: grid; grid-template-columns: max-content 1fr; gap: 5px 12px; margin: 0; font-size: 14px; }
+  .bci-card dt { color: var(--muted); }
+  .bci-card dd { margin: 0; color: var(--ink); }
+  #bciSort svg { display: block; width: 100%; min-width: 520px; height: auto; }
+  #bciSort .raw { fill: none; stroke: var(--ink); stroke-width: 1.3; stroke-linejoin: round; }
+  #bciSort .raw.dim { stroke: var(--edge); }
+  #bciSort .sp { fill: none; stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
+  #bciSort .base { stroke: var(--line); stroke-width: 1; }
+  #bciSort .rowlab { font: 500 11px var(--font-body); fill: var(--muted); }
+  .sortkey { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 13px; color: var(--ink-2); }
+  .sortkey span { display: inline-flex; align-items: center; gap: 7px; }
+  .sortkey b { color: var(--ink); font-weight: 600; }
+  .tl { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px 28px; }
+  .tl-era { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+  .tl-era h3 { font-size: 15px; border-top: 2px solid var(--ink); padding-top: 8px; }
+  .tl-era ol { list-style: none; margin: 0; padding: 0 0 0 14px; border-left: 2px solid var(--line); display: flex; flex-direction: column; gap: 12px; }
+  .tl-era li { position: relative; display: flex; flex-direction: column; gap: 1px; }
+  .tl-era li::before { content: ""; position: absolute; left: -20px; top: 6px; width: 10px; height: 10px; border-radius: 50%; background: var(--ink); box-shadow: 0 0 0 3px var(--bg); }
+  .tl-era .num { font-size: 14px; font-weight: 500; color: var(--ink); }
+  .tl-era p { font-size: 14.5px; color: var(--ink-2); line-height: 1.45; }
+  .land { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; }
+  .land-col { border: 1.5px solid var(--dc); border-radius: 12px; padding: 14px; display: flex; flex-direction: column; gap: 6px; min-width: 0; background: var(--surface); }
+  .land-sub { font-size: 12.5px; color: var(--muted); line-height: 1.4; }
+  .land-col ul { list-style: none; margin: 6px 0 0; padding: 0; display: flex; flex-direction: column; }
+  .land-col li { display: flex; align-items: center; gap: 10px; padding: 6px 6px; border-radius: 6px; font-size: 14.5px; cursor: default; }
+  .land-col li:hover, .land-col li:focus-visible { background: var(--surface-2); }
+  .land-col .co { flex: 1 1 auto; min-width: 0; font-weight: 500; }
+  .land-col .co small { font-weight: 400; color: var(--muted); font-size: 12px; }
+  .land-col .ppl { font-size: 13px; color: var(--ink-2); }
+  .land-col .ppl::after { content: " people"; color: var(--muted); font-family: var(--font-body); font-size: 12px; }
+  .meter { display: inline-flex; gap: 3px; flex: none; }
+  .meter i { width: 8px; height: 8px; border-radius: 50%; border: 1.5px solid var(--dc); }
+  .meter i.on { background: var(--dc); }
+  #bciMap svg { display: block; width: 100%; min-width: 520px; max-width: 760px; height: auto; }
+  #bciMap .mapzone { opacity: .2; }
+  #bciMap .mapring { fill: none; stroke-width: 1.5; }
+  #bciMap .mz-t { font: 700 13.5px var(--font-display); fill: var(--ink); }
+  #bciMap .mz-r { font: 500 11.5px var(--font-mono); fill: var(--ink-2); }
+  #bciMap .mz-c { font: 12px var(--font-body); fill: var(--ink-2); }
+  #bciMap .ax { fill: none; stroke: var(--ink); stroke-width: 1.5; }
+  #bciMap .axh { fill: none; stroke: var(--ink); stroke-width: 1.5; }
+  #bciMap .axl { font: 500 12px var(--font-body); fill: var(--ink-2); }
+  @media (max-width: 900px) { .bci-two { grid-template-columns: 1fr; } }
+
+  /* BCI radar and news */
+  #bciRadar svg { display: block; width: 100%; min-width: 680px; height: auto; }
+  #bciRadar .board { fill: var(--canvas); stroke: var(--line); stroke-width: 1; }
+  #bciRadar .sep { stroke: var(--line); stroke-width: 1; stroke-dasharray: 3 4; }
+  #bciRadar .st { font: 700 14px var(--font-display); fill: var(--ink); }
+  #bciRadar .stn { font: 400 12px var(--font-mono); fill: var(--muted); }
+  #bciRadar .sts { font: 12px var(--font-body); fill: var(--muted); }
+  #bciRadar .prog { font: 11px var(--font-mono); fill: var(--muted); }
+  #bciRadar .rdot { cursor: pointer; outline: none; transition: opacity .15s; }
+  #bciRadar .rdot .d { fill: var(--dc); stroke: var(--canvas); stroke-width: 1.5; }
+  #bciRadar .rdot .ring { fill: none; stroke: var(--dc); stroke-width: 1.5; }
+  #bciRadar .rdot text { font: 500 12.5px var(--font-body); fill: var(--ink-2); }
+  #bciRadar .rdot .hit { fill: transparent; }
+  #bciRadar .rdot:hover text, #bciRadar .rdot.on text { fill: var(--ink); font-weight: 600; }
+  #bciRadar .rdot.on .hit { fill: var(--surface-2); }
+  #bciRadar .rdot:focus-visible .hit { stroke: var(--accent); stroke-width: 2; }
+  #bciRadar .rdot.dim { opacity: .22; }
+  .radarkey { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; }
+  .radarkey .ringkey { display: inline-flex; align-items: center; gap: 7px; font-size: 13px; color: var(--ink-2); }
+  .radarkey .ringkey i { width: 12px; height: 12px; border-radius: 50%; border: 1.5px solid var(--ink-2); box-shadow: inset 0 0 0 2.5px var(--surface), inset 0 0 0 7px var(--ink-2); }
+  .bci-card h3 small { font: 400 13px var(--font-body); color: var(--muted); }
+  .cardnews { list-style: none; margin: 4px 0 0; padding: 10px 0 0; border-top: 1px solid var(--line); display: flex; flex-direction: column; gap: 9px; font-size: 14px; color: var(--ink-2); line-height: 1.45; }
+  .cardnews .num { display: block; font-size: 12px; color: var(--muted); }
+  .newsgrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px 24px; }
+  .news-col { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+  .news-col h3 { font-size: 15px; border-top: 3px solid var(--dc); padding-top: 8px; }
+  .news-col ol { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 12px; }
+  .news-col li { display: flex; flex-direction: column; gap: 1px; }
+  .news-col .num { font-size: 12px; color: var(--muted); }
+  .news-col p { font-size: 14.5px; color: var(--ink-2); line-height: 1.45; }
+  .news-col p b { color: var(--ink); font-weight: 600; }
+  .news-col a, .cardnews a { font-size: 12.5px; white-space: nowrap; }
+
+  /* Inference */
+  .rg-bar { position: absolute; top: 50%; height: 10px; margin-top: -5px; border-radius: 5px; opacity: .85; }
+  .rg-med { position: absolute; top: 50%; width: 3px; height: 16px; margin: -8px 0 0 -1.5px; border-radius: 1px; background: var(--ink); box-shadow: 0 0 0 1.5px var(--surface); }
+  .inf-pick { cursor: pointer; }
+  .inf-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; font-size: 14px; color: var(--ink-2); }
+  .inf-bar select { font: 500 14px/1.2 var(--font-body); color: var(--ink); background: var(--surface); border: 1px solid var(--edge); border-radius: 7px; padding: 7px 10px; max-width: 100%; }
+  #infHosts { grid-template-columns: minmax(110px, max-content) 1fr; }
+  #infHosts .lab { max-width: 240px; }
+  .tagx { font: 10.5px/1 var(--font-mono); letter-spacing: .04em; padding: 3px 5px; border-radius: 4px; border: 1px solid var(--money); color: var(--ink); white-space: nowrap; }
+  .tagx.q { border-color: var(--line); color: var(--muted); }
+  .inf-two { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px; }
+  .inf-svg { display: block; width: 100%; min-width: 460px; height: auto; }
+  .inf-svg .grid { stroke: var(--line); stroke-width: 1; }
+  .inf-svg .tk { font: 11px var(--font-mono); fill: var(--muted); }
+  .inf-svg .ln { fill: none; stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
+  .inf-svg .pt { stroke: var(--surface); stroke-width: 2; outline: none; cursor: default; }
+  .inf-svg .pt:hover, .inf-svg .pt:focus-visible { stroke: var(--ink); }
+  .inf-svg .endlab { font: 500 11.5px var(--font-body); fill: var(--ink-2); }
+  @media (max-width: 600px) { #infHosts { grid-template-columns: minmax(80px, 38%) 1fr; } .tagx.q { display: none; } }
+
+  /* News radar (Overview) */
+  .nr-grid { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 22px; align-items: start; }
+  #newsRadar { overflow-x: auto; min-width: 0; }
+  #newsRadar svg { display: block; width: 100%; min-width: 470px; max-width: 640px; height: auto; margin: 0 auto; }
+  .nr-wedge { opacity: .07; }
+  .nr-ring { fill: none; stroke: var(--line); stroke-width: 1; }
+  .nr-sep { stroke: var(--line); stroke-width: 1; }
+  .nr-arc { fill: none; stroke-width: 4; stroke-linecap: round; }
+  .nr-rl { font: 10.5px var(--font-mono); fill: var(--muted); paint-order: stroke; stroke: var(--surface); stroke-width: 4px; stroke-linejoin: round; }
+  .nr-sl { font: 700 13px var(--font-display); fill: var(--ink); }
+  .nr-hub { fill: var(--surface); stroke: var(--edge); stroke-width: 1; }
+  .nr-now { font: 600 11px var(--font-body); fill: var(--ink-2); }
+  .nr-dot { cursor: pointer; outline: none; }
+  .nr-dot circle { fill: var(--surface); stroke: var(--dc); stroke-width: 2.5; }
+  .nr-dot text { font: 600 12px var(--font-mono); fill: var(--ink); pointer-events: none; }
+  .nr-dot.hl circle, .nr-dot:focus-visible circle { stroke-width: 4.5; }
+  .nr-dot.on circle { fill: var(--ink); stroke: var(--ink); }
+  .nr-dot.on text { fill: var(--surface); }
+  .nr-side { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+  .nr-side .bci-card { min-height: 168px; font-size: 15px; }
+  .nc-src { font-size: 13px; }
+  .nc-src span { color: var(--muted); }
+  .nl { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px 18px; }
+  .nl-group { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
+  .nl-group h3 { font-size: 13px; border-top: 3px solid var(--dc); padding-top: 6px; margin-bottom: 3px; }
+  .nl-item { display: grid; grid-template-columns: 20px minmax(0, 1fr) auto; gap: 8px; align-items: baseline; width: 100%; text-align: left; font: 14px/1.35 var(--font-body); color: var(--ink-2); background: none; border: 0; border-radius: 6px; padding: 4px 6px; cursor: pointer; }
+  .nl-item:hover, .nl-item.hl { background: var(--surface-2); color: var(--ink); }
+  .nl-item[aria-pressed="true"] { background: var(--accent-soft); color: var(--ink); font-weight: 500; }
+  .nl-n { font: 12px var(--font-mono); color: var(--muted); }
+  .nl-d { font-size: 12px; color: var(--muted); white-space: nowrap; }
+  @media (max-width: 900px) { .nr-grid { grid-template-columns: 1fr; } }
+
+  footer { border-top: 1px solid var(--line); padding-block: 28px 40px; color: var(--muted); font-size: 13.5px; }
+  footer .col { gap: 6px; }
+  @media (max-width: 600px) {
+    .view { padding-block: 28px 48px; }
+    .lede { font-size: 17px; }
+    .bars { grid-template-columns: minmax(80px, 34%) 1fr; }
+    .mapview .stage { height: 70vh; min-height: 420px; }
+  }
+</style>
+
+<header class="mast gutter">
+  <div class="mast-in">
+    <a class="logo" href="#overview" aria-label="AI Value Chain, overview">
+      <svg width="22" height="22" viewBox="0 0 22 22" aria-hidden="true"><rect x="1" y="7" width="6" height="8" rx="1.5" fill="var(--s1)"></rect><rect x="8" y="7" width="6" height="8" rx="1.5" fill="var(--s2)"></rect><rect x="15" y="7" width="6" height="8" rx="1.5" fill="var(--s3)"></rect></svg>
+      AI Value Chain
+    </a>
+    <nav aria-label="Pages">
+      <a href="#overview">Overview</a>
+      <a href="#map">Chain map</a>
+      <a href="#chips">Chips</a>
+      <a href="#datacenters">Data centers</a>
+      <a href="#world">World map</a>
+      <a href="#inside">3D data center</a>
+      <a href="#models">Models &amp; money</a>
+      <a href="#inference">Inference</a>
+      <a href="#environment">Environment</a>
+      <a href="#humans">Humans</a>
+      <a href="#bci">Brain interfaces</a>
+      <a href="#education">Education</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <!-- ═══ Overview ═══ -->
+  <div class="view gutter" id="v-overview" data-view="overview">
+    <div class="col">
+      <div>
+        <p class="eyebrow">The AI value chain · 2025 figures</p>
+        <h1>Who builds AI, and who gets paid for it</h1>
+        <p class="lede">Every chatbot answer runs on a long chain of companies: the makers of chip-printing machines, the chipmakers, the builders of data centers, the clouds, the model labs and the apps. Money enters at the end, from people and businesses, and flows back up the chain.</p>
+      </div>
+
+      <section>
+        <h2>The chain in five steps</h2>
+        <ol class="steps">
+          <li><h3><span class="ph" style="background:var(--s1)"></span>Make the chips</h3><p>Lithography machines, chip designers, foundries and memory makers produce the accelerators that do the math.</p><a href="#chips">Chips →</a></li>
+          <li><h3><span class="ph" style="background:var(--s2)"></span>Build the data centers</h3><p>Developers, contractors and power and cooling suppliers turn land and grid connections into halls full of servers.</p><a href="#datacenters">Data centers →</a></li>
+          <li><h3><span class="ph" style="background:var(--s2)"></span>Rent the compute</h3><p>Hyperscalers and GPU clouds buy the chips, fill the buildings and rent out computing time.</p><a href="#datacenters">Clouds →</a></li>
+          <li><h3><span class="ph" style="background:var(--s3)"></span>Train and serve models</h3><p>Labs spend that compute turning data into models, then sell answers by the token.</p><a href="#models">Models →</a></li>
+          <li><h3><span class="ph" style="background:var(--s3)"></span>Use AI</h3><p>Assistants, AI-native apps and enterprise software put the models in front of users, who pay for all of it.</p><a href="#models">Who pays →</a></li>
+        </ol>
+      </section>
+
+      <section>
+        <h2>AI news radar</h2>
+        <p class="prose">The biggest stories of the past year, sorted by topic and by how recently they broke. The newest sit in the middle. Click a number to read the story.</p>
+        <div class="figwrap">
+          <div class="nr-grid">
+            <div id="newsRadar"></div>
+            <div class="nr-side">
+              <div class="bci-card" id="newsCard" aria-live="polite"></div>
+              <div class="nl" id="newsList"></div>
+            </div>
+          </div>
+          <p class="figcap">As of <span id="newsAsOf"></span>. Stories were picked by hand from web searches, so this is a selection, not a full record. A few rest on trackers or secondary reports only, and say so when opened.</p>
+        </div>
+      </section>
+
+      <section>
+        <h2>Revenue sits upstream</h2>
+        <div class="chart" id="chart-overview"></div>
+        <p class="callout">Nvidia's data center business alone brought in <span class="num">$193.7B</span>. That is about ten times the combined 2025 revenue of OpenAI and Anthropic (<span class="num">≈$18.6B</span>).</p>
+      </section>
+
+      <section>
+        <h2>Where it can break</h2>
+        <p class="prose">These stages depend on one supplier, a handful of firms, or a physical limit. A problem at any of them slows everything downstream.</p>
+        <div class="chokes" id="chokes"></div>
+      </section>
+
+      <section>
+        <h2>Explore</h2>
+        <div class="next">
+          <a href="#map">Open the interactive map</a>
+          <a href="#chips">How chips get made</a>
+          <a href="#datacenters">Who builds the data centers</a>
+          <a href="#models">Where the money goes</a>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <!-- ═══ Map ═══ -->
+  <div class="view mapview gutter" id="v-map" data-view="map" hidden>
+    <div class="mapbar">
+      <p>Hover a stage to trace what it depends on and what depends on it. Turn on layers to see companies, chokepoints, or the money flowing back upstream.</p>
+      <div class="toolbar" role="toolbar" aria-label="Map layers">
+        <button class="toggle" data-layer="companies" aria-pressed="false">Companies</button>
+        <button class="toggle" data-layer="choke" aria-pressed="false">Chokepoints</button>
+        <button class="toggle money" data-layer="money" aria-pressed="false">Follow the money</button>
+        <div class="search">
+          <input id="q" list="colist" placeholder="Find a company…" aria-label="Find a company" autocomplete="off">
+          <datalist id="colist"></datalist>
+        </div>
+        <button class="iconbtn" id="about">How to read this</button>
+      </div>
+    </div>
+    <div class="legends">
+      <span class="legend reg" id="legReg"><b>HQ region</b></span>
+      <span class="legend chk">
+        <b>Chokepoint</b>
+        <span class="sw"><i class="bar" style="background:var(--c1)"></i>some friction</span>
+        <span class="sw"><i class="bar" style="background:var(--c2)"></i>tight</span>
+        <span class="sw"><i class="bar" style="background:var(--c3)"></i>severe</span>
+        <span class="sw"><i class="bar" style="background:var(--c4)"></i>single point of failure</span>
+      </span>
+      <span class="legend mon"><b>Money</b> flows upstream: from people and businesses, back through every stage to the toolmakers.</span>
+    </div>
+    <div class="stage">
+      <div class="wrap" id="wrap"><svg id="map" role="img" aria-label="Diagram of the AI value chain"></svg></div>
+      <div class="zoom">
+        <button id="zout" aria-label="Zoom out">−</button>
+        <button id="zfit">Fit</button>
+        <button id="zin" aria-label="Zoom in">+</button>
+      </div>
+      <div class="hint">Hover a stage to trace its chain · click for details · drag to pan</div>
+    </div>
+  </div>
+
+  <!-- ═══ Chips ═══ -->
+  <div class="view gutter" id="v-chips" data-view="chips" hidden>
+    <div class="col">
+      <div>
+        <p class="eyebrow">Step 1 · Make the chips</p>
+        <h1>How AI chips get made</h1>
+        <p class="lede">An AI accelerator passes through more specialist hands than almost any other product. Several of those steps have only one or two companies in the world that can do them.</p>
+      </div>
+
+      <section class="prose">
+        <p><b>Design.</b> Nvidia, AMD and the in-house teams at Google, Amazon, Microsoft and Meta design the chips in software from Synopsys and Cadence. Broadcom and Marvell build custom chips for the clouds.</p>
+        <p><b>Manufacturing.</b> TSMC turns those designs into silicon, using extreme-ultraviolet scanners that only ASML builds and tools from Applied Materials, Lam, Tokyo Electron and KLA.</p>
+        <p><b>Memory and packaging.</b> Each processor is bonded to stacks of high-bandwidth memory from SK hynix, Samsung or Micron. That packaging step has repeatedly been the bottleneck.</p>
+        <p><b>Systems.</b> Taiwanese manufacturers such as Foxconn, Quanta and Wiwynn assemble the chips into servers and full racks, wired together with switches and optics.</p>
+      </section>
+
+      <div class="stats">
+        <div class="stat"><span class="v">≈90%</span><span class="k">Share of Nvidia's revenue from data centers: $193.7B of $215.9B (FY2026)</span></div>
+        <div class="stat"><span class="v">$3–4M</span><span class="k">Estimated price of one GB200 NVL72 rack, with 72 GPUs and 36 CPUs</span></div>
+        <div class="stat"><span class="v">€32.7B</span><span class="k">ASML's 2025 net sales, up 16%. It is the only maker of EUV scanners</span></div>
+        <div class="stat"><span class="v">$250–300k</span><span class="k">Price of one board with eight H100 GPUs, the workhorse of 2024–25</span></div>
+      </div>
+
+      <section>
+        <div class="chart" id="chart-chips"></div>
+      </section>
+
+      <section>
+        <h2>China is building its own stack</h2>
+        <div class="prose">
+          <p>US export controls cut Chinese companies off from the most advanced chips and chipmaking tools, so a parallel supply chain is growing fast. In 2025 <b>Cambricon</b>'s revenue rose 453% to about $910M, <b>Moore Threads</b> grew 243% to about $221M and <b>MetaX</b> grew 121% to about $230M.</p>
+          <p>Manufacturing is the hard part: <b>SMIC</b> is China's most advanced foundry, and <b>YMTC</b> makes flash memory. Both are still well behind TSMC and the leading memory makers.</p>
+        </div>
+      </section>
+
+      <section>
+        <h2>Who's who</h2>
+        <div class="regkey" data-regkey></div>
+        <div class="dir" data-dir="eda,materials,litho,fabtools,design,foundry,memory,packaging,servers,network"></div>
+      </section>
+      <div class="next"><a href="#map">See chips on the map</a><a href="#datacenters">Next: data centers →</a></div>
+    </div>
+  </div>
+
+  <!-- ═══ Data centers ═══ -->
+  <div class="view gutter" id="v-datacenters" data-view="datacenters" hidden>
+    <div class="col">
+      <div>
+        <p class="eyebrow">Steps 2–3 · Build the data centers, rent the compute</p>
+        <h1>Who builds and runs the data centers</h1>
+        <p class="lede">Chips need somewhere to run. An AI campus needs land, hundreds of megawatts of power, liquid cooling and years of construction before it earns anything.</p>
+      </div>
+
+      <section>
+        <h2>Four kinds of company</h2>
+        <div class="roles">
+          <div class="role"><h3>Owners and funders</h3><p>The hyperscalers buy most of the chips and sign the long leases. Their capital spending is the demand signal for everything upstream.</p><p class="ex">AWS, Microsoft Azure, Google Cloud, Meta, Oracle</p></div>
+          <div class="role"><h3>Developers and colocation</h3><p>They secure land and power, finance and build the shells, then lease capacity by the megawatt.</p><p class="ex">Equinix, Digital Realty, QTS, Vantage, AirTrunk</p></div>
+          <div class="role"><h3>Builders</h3><p>General contractors and engineering firms build the halls, power yards and cooling plants.</p><p class="ex">Turner, HITT, DPR, Holder, Mortenson</p></div>
+          <div class="role"><h3>Power and cooling</h3><p>Switchgear, backup power and liquid cooling, now standard for dense AI racks. Lead times run long.</p><p class="ex">Vertiv, Schneider Electric, Johnson Controls, Delta</p></div>
+        </div>
+      </section>
+
+      <section>
+        <div class="chart" id="chart-cloud"></div>
+      </section>
+
+      <section>
+        <h2>How a data center landlord earns</h2>
+        <div class="chart" id="chart-equinix"></div>
+        <p class="prose">Most of Equinix's money is rent for space and power, billed monthly per cabinet and per kilowatt. The rest comes from fees for connecting tenants directly to clouds and network carriers. About 95% of its revenue recurs.</p>
+      </section>
+
+      <section>
+        <h2>The builders are growing fastest</h2>
+        <div class="stats">
+          <div class="stat"><span class="v">+40%</span><span class="k">Turner Construction's revenue growth in 2025, to $29.2B</span></div>
+          <div class="stat"><span class="v">+61%</span><span class="k">Mortenson's revenue growth, to $10.8B</span></div>
+          <div class="stat"><span class="v">+28%</span><span class="k">Vertiv's sales growth, to $10.2B, on AI power and cooling</span></div>
+          <div class="stat"><span class="v">3 GW+</span><span class="k">Power capacity under contract at QTS (Blackstone)</span></div>
+        </div>
+      </section>
+
+      <section>
+        <h2>Beyond the US</h2>
+        <div class="prose">
+          <p><b>Europe</b> is building sovereign clouds that keep data under European law: OVHcloud (€1.08B revenue), STACKIT from the Schwarz Group, Scaleway and Open Telekom Cloud. Nscale reports a contract backlog of up to $14B.</p>
+          <p><b>Southeast Asia and Australia</b> are a fast-growing hub, led by AirTrunk, ST Telemedia (a 1.7 GW platform) and Princeton Digital Group, with contractors such as Gamuda building campuses in Malaysia.</p>
+        </div>
+      </section>
+
+      <section>
+        <h2>Who's who</h2>
+        <div class="regkey" data-regkey></div>
+        <div class="dir" data-dir="hyperscalers,neoclouds,developers,construction,electrical,power"></div>
+      </section>
+      <div class="next"><a href="#world">See them on the world map</a><a href="#inside">Look inside a data center →</a></div>
+    </div>
+  </div>
+
+  <!-- ═══ World map ═══ -->
+  <div class="view gutter" id="v-world" data-view="world" hidden>
+    <div class="col">
+      <div>
+        <p class="eyebrow">Step 2 · Where the compute lives</p>
+        <h1>The world's AI campuses</h1>
+        <p class="lede">The largest AI sites draw a gigawatt or more, about the output of a nuclear reactor. They go wherever power, land and permits can be found quickly, which increasingly means rural Texas, the US Midwest, the Nordics and the Gulf.</p>
+      </div>
+      <div class="stats" id="geoStats"></div>
+      <div class="geo">
+        <div class="geo-main">
+          <div class="ctrlbar">
+            <div class="seg" role="group" aria-label="Zoom to a region">
+              <button type="button" class="chip" data-region="world" aria-pressed="true">World</button>
+              <button type="button" class="chip" data-region="na" aria-pressed="false">North America</button>
+              <button type="button" class="chip" data-region="eu" aria-pressed="false">Europe</button>
+              <button type="button" class="chip" data-region="me" aria-pressed="false">Middle East &amp; India</button>
+              <button type="button" class="chip" data-region="ap" aria-pressed="false">Asia-Pacific</button>
+            </div>
+            <div class="seg" role="group" aria-label="Show sites">
+              <button type="button" class="chip" data-status="operating" aria-pressed="true"><i class="k-operating"></i>Operating</button>
+              <button type="button" class="chip" data-status="building" aria-pressed="true"><i class="k-building"></i>Under construction</button>
+              <button type="button" class="chip" data-status="planned" aria-pressed="true"><i class="k-planned"></i>Planned</button>
+              <button type="button" class="chip" id="geoHubs" aria-pressed="true"><i class="k-hub"></i>Established hubs</button>
+            </div>
+          </div>
+          <div class="geo-stage">
+            <svg id="geoMap" role="group" aria-label="World map of AI data center campuses"></svg>
+            <div class="zoom"><button type="button" id="geoOut" aria-label="Zoom out">−</button><button type="button" id="geoIn" aria-label="Zoom in">+</button></div>
+          </div>
+          <p class="keynote">Circle area shows capacity as reported, which is often the full planned build-out. Diamonds mark sites that haven't disclosed a size. Blue rings are established hubs with many data centers. Scroll to zoom, drag to pan.</p>
+        </div>
+        <aside class="geo-side">
+          <div class="geo-sel" id="geoSel" aria-live="polite"></div>
+          <div class="geo-rank"><h3>Ten largest disclosed sites</h3><div class="bars" id="geoRank"></div></div>
+        </aside>
+      </div>
+      <details class="tbl"><summary>Show all sites as a table</summary><div class="tblwrap" id="geoTable"></div></details>
+
+      <section>
+        <h2>Why they end up where they do</h2>
+        <div class="prose">
+          <p><b>Power comes first.</b> A 1 GW campus needs a grid connection that can take years to approve, so developers chase places with spare capacity or build their own generation. That's why Abilene, Memphis and rural Louisiana now host some of the biggest sites.</p>
+          <p><b>Training can go anywhere; serving users can't.</b> Training a model doesn't depend on distance, so it moves to cheap power in Texas, Norway or Johor. Answering users quickly needs sites near cities, which keeps Northern Virginia, Frankfurt and Singapore busy.</p>
+          <p><b>Countries want their own.</b> Governments in Europe, the Gulf, India and Southeast Asia are paying for sovereign compute so their data and AI stay under their own laws.</p>
+        </div>
+      </section>
+      <p class="keynote">Sites marked "From the research decks" use the decks' locations and figures. The others are public announcements as of mid-2026 that haven't been checked against the research yet. Hubs have no capacity figure because estimates vary widely between sources.</p>
+      <div class="next"><a href="#inside">Next: inside a data center →</a><a href="#datacenters">Who builds them</a></div>
+    </div>
+  </div>
+
+  <!-- ═══ Inside a data center (3D) ═══ -->
+  <div class="view gutter" id="v-inside" data-view="inside" hidden>
+    <div class="col">
+      <div>
+        <p class="eyebrow">Step 2 · Inside a data center</p>
+        <h1>What's inside an AI data center</h1>
+        <p class="lede">An AI campus is mostly machinery for moving electricity in and heat out. Hover over any part to see what it does, or click it to see who makes it.</p>
+      </div>
+      <div class="dc">
+        <div class="dc-main">
+          <div class="ctrlbar">
+            <div class="seg" role="group" aria-label="Show flows">
+              <button type="button" class="chip" data-flow="power" aria-pressed="false"><i style="background:var(--c1)"></i>Follow the power</button>
+              <button type="button" class="chip" data-flow="heat" aria-pressed="false"><i style="background:var(--c3)"></i>Follow the heat</button>
+            </div>
+            <div class="seg">
+              <button type="button" class="chip" id="dcLabels" aria-pressed="true">Labels</button>
+              <button type="button" class="chip" id="dcReset">Reset view</button>
+            </div>
+          </div>
+          <div class="dc-stage" id="dcStage"></div>
+          <p class="keynote">Drag to rotate, scroll or pinch to zoom. The roof and front walls are cut away. This is a simplified campus, not drawn to scale.</p>
+        </div>
+        <aside class="dc-side">
+          <div class="dc-card" id="dcCard" aria-live="polite"></div>
+          <div class="dc-list" id="dcList"></div>
+        </aside>
+      </div>
+      <section>
+        <h2>The chips cost more than the building</h2>
+        <div class="stats">
+          <div class="stat"><span class="v">≈$3–4M</span><span class="k">Price of one 72-GPU Nvidia rack, according to the research decks</span></div>
+          <div class="stat"><span class="v">100–130 kW</span><span class="k">Power drawn by one AI rack, about ten times an ordinary server rack</span></div>
+          <div class="stat"><span class="v">2.2 GW</span><span class="k">Planned power draw of Amazon's Project Rainier when all 30 buildings are complete</span></div>
+        </div>
+        <p class="prose">Every watt that goes into the racks comes out as heat. That's why the power and cooling suppliers in this model, such as Vertiv, Schneider Electric and Eaton, have grown alongside Nvidia.</p>
+      </section>
+      <div class="next"><a href="#world">See the campuses on the world map</a><a href="#models">Next: models &amp; money →</a></div>
+    </div>
+  </div>
+
+  <!-- ═══ Models & money ═══ -->
+  <div class="view gutter" id="v-models" data-view="models" hidden>
+    <div class="col">
+      <div>
+        <p class="eyebrow">Steps 4–5 · Train, serve and use models</p>
+        <h1>Models, apps and where the money goes</h1>
+        <p class="lede">Model labs are the most visible part of AI and the biggest buyers of compute. Their revenue is growing fast, but it is still small next to what the hardware makers take in.</p>
+      </div>
+
+      <section>
+        <div class="chart" id="chart-labs"></div>
+        <p class="prose">Growth matters more than the totals. OpenAI ended 2025 at an annual run-rate of about $20B. Anthropic's run-rate rose from $1B in January to $9B in December.</p>
+      </section>
+
+      <section>
+        <h2>Three ways to make money from models</h2>
+        <div class="roles">
+          <div class="role"><h3>Sell access</h3><p>OpenAI, Anthropic and Mistral charge per token through APIs and by subscription through their apps.</p><p class="ex">OpenAI ≈$13.1B · Anthropic ≈$5.5B · Mistral ≈$200M</p></div>
+          <div class="role"><h3>Give it away</h3><p>Meta releases Llama for free and earns nothing directly from it. The models support its ads and apps instead.</p><p class="ex">Meta: $0 direct model revenue on $201.0B total</p></div>
+          <div class="role"><h3>Build it into products</h3><p>Apple, Microsoft and the enterprise software firms add AI to products people already pay for.</p><p class="ex">Apple: ≈$0.9B from AI software on $416.2B</p></div>
+        </div>
+      </section>
+
+      <section>
+        <h2>The data and software layer</h2>
+        <div class="stats">
+          <div class="stat"><span class="v">$4.7B</span><span class="k">Snowflake revenue, FY2026, up 29%</span></div>
+          <div class="stat"><span class="v">$4.5B</span><span class="k">Palantir revenue in 2025, up 56%</span></div>
+          <div class="stat"><span class="v">$3.7B</span><span class="k">Databricks annual recurring revenue, August 2025, up 50%</span></div>
+          <div class="stat"><span class="v">$2.0B</span><span class="k">Scale AI revenue in 2025, up 130%, from training data and evaluation</span></div>
+        </div>
+      </section>
+
+      <section>
+        <h2>China's labs earn far less</h2>
+        <div class="prose">
+          <p>Chinese labs release strong models, often as open weights, but earn far less from them. Zhipu AI had about $105M of revenue in 2025. DeepSeek's annual recurring revenue was an estimated $13–30M, and Moonshot's 2025 revenue an estimated $15–30M. The largest Chinese AI business is ByteDance, at an estimated $4B annual run-rate.</p>
+        </div>
+      </section>
+
+      <section>
+        <h2>Who's who</h2>
+        <div class="regkey" data-regkey></div>
+        <div class="dir" data-dir="data,frontier,openw,inference,assistants,native,enterprise"></div>
+      </section>
+      <div class="next"><a href="#inference">Next: who serves the models →</a><a href="#education">Test yourself</a></div>
+    </div>
+  </div>
+  <!-- ═══ Inference ═══ -->
+  <div class="view gutter" id="v-inference" data-view="inference" hidden>
+    <div class="col">
+      <div>
+        <p class="eyebrow">Step 4 · Serving models</p>
+        <h1>Same model, many hosts, very different prices</h1>
+        <p class="lede">Once a model's weights are public, anyone with the hardware can serve it. Dozens of companies do, and they compete on price, speed and privacy. A closed model is sold by its maker and a few cloud partners, so its price barely moves.</p>
+      </div>
+      <div class="stats" id="infStats"></div>
+
+      <section>
+        <h2>How far apart hosts price the same model</h2>
+        <div class="chart">
+          <div class="dp-legend" aria-hidden="true"><span><i class="dp-key sq" style="background:var(--s3)"></i>Open-weight model</span><span><i class="dp-key sq" style="background:var(--s1)"></i>Closed model</span><span><i class="dp-key" style="width:3px;height:14px;border-radius:1px;background:var(--ink)"></i>Median host</span></div>
+          <div class="dp" id="infRange"></div>
+          <details class="tbl"><summary>Show as a table</summary><div class="tblwrap" id="infRangeTable"></div></details>
+        </div>
+        <p class="keynote" id="infStamp"></p>
+      </section>
+
+      <section id="infDetail">
+        <h2>Every host of one model</h2>
+        <div class="inf-bar">
+          <label for="infModel">Model</label>
+          <select id="infModel"></select>
+          <button type="button" class="chip" id="infZdr" aria-pressed="false">Zero data retention only</button>
+        </div>
+        <div class="chart">
+          <div class="chart-head"><h3 id="infTitle"></h3><p id="infNote"></p></div>
+          <div class="bars" id="infHosts"></div>
+          <div><button type="button" class="chip" id="infAll" hidden></button></div>
+          <details class="tbl"><summary>Show every host as a table</summary><div class="tblwrap" id="infHostTable"></div></details>
+        </div>
+        <div class="inf-two">
+          <div class="chart"><div class="chart-head"><h3>Price over time</h3><p>Output price per million tokens on each day checked.</p></div><div id="infHist"></div></div>
+          <div class="chart"><div class="chart-head"><h3>Price against speed</h3><p>Does paying more buy faster output?</p></div><div id="infSpeed"></div></div>
+        </div>
+      </section>
+
+      <section>
+        <h2>Where the hosts run</h2>
+        <div class="chart">
+          <div class="chart-head"><h3>Hosting companies by data center country</h3><p id="infWhereNote"></p></div>
+          <div class="bars" id="infWhere"></div>
+          <details class="tbl"><summary>Show as a table</summary><div class="tblwrap" id="infWhereTable"></div></details>
+        </div>
+      </section>
+
+      <section>
+        <h2>How to read this</h2>
+        <div class="gaps">
+          <div><h3>Same name, different product</h3><p>Hosts often run an open model at lower numerical precision (fp4 or fp8, where the original is 16-bit) to save memory. That makes it cheaper and can change the answers slightly.</p></div>
+          <div><h3>Zero data retention</h3><p>ZDR means the host says it does not store your prompts or outputs. The flag comes from OpenRouter's list and is the host's own policy, not an audit.</p></div>
+          <div><h3>List prices only</h3><p>These are public prices through OpenRouter. Large customers negotiate their own, and a host's direct price can differ.</p></div>
+          <div><h3>Why it matters for the chain</h3><p>Wide gaps and many sellers are signs of a commodity market. That pushes profit away from serving open models and toward whoever owns scarce chips, power or a model nobody else can sell.</p></div>
+        </div>
+      </section>
+      <div class="next"><a href="#models">Models &amp; money</a><a href="#world">See the campuses on the world map</a><a href="#environment">Next: energy and water →</a></div>
+    </div>
+  </div>
+
+  <!-- ═══ Environment ═══ -->
+  <div class="view gutter" id="v-environment" data-view="environment" hidden>
+    <div class="col">
+      <div>
+        <p class="eyebrow">Energy and water</p>
+        <h1>What a prompt costs in energy and water</h1>
+        <p class="lede">A typical AI text prompt uses about 0.3 watt-hours in the data center, roughly a laptop running for a minute. The published figures vary a lot because they count different things, so each chart below groups them by what was measured and who measured it.</p>
+      </div>
+      <div class="stats">
+        <div class="stat"><span class="v">≈0.3 Wh</span><span class="k">Energy for a typical text prompt: Google reports 0.24, Microsoft estimates 0.31, OpenAI says 0.34</span></div>
+        <div class="stat"><span class="v">≈0.3 mL</span><span class="k">Water per prompt reported by Google (0.26 mL, cooling) and OpenAI (0.32 mL)</span></div>
+        <div class="stat"><span class="v">×1,000</span><span class="k">Gap between the lowest and highest published figures for energy per token</span></div>
+        <div class="stat"><span class="v">6–32×</span><span class="k">Water used to generate the electricity, compared with cooling water at the site</span></div>
+      </div>
+
+      <section>
+        <h2>Compared with search and streaming</h2>
+        <p class="prose">Counting only the data center, ten minutes of streaming video uses about as much energy as two typical AI prompts. Counting the screen and the network too, it is about forty. A long reasoning query lands in the same range as the video.</p>
+        <div class="chart">
+          <div class="dp-legend" aria-hidden="true"><span><i class="dp-key k1"></i>AI prompt</span><span><i class="dp-key k0"></i>Something else, for comparison</span><span><i class="dp-key kw"></i>Reported range</span></div>
+          <div class="dp" id="envCompare"></div>
+          <details class="tbl"><summary>Show as a table</summary><div class="tblwrap" id="envCompareTable"></div></details>
+        </div>
+        <p class="keynote">A typical prompt here is 0.3 Wh, the rounded middle of the Google, OpenAI and Microsoft figures. The AI figures cover the data center only. The video figures are the IEA's 2019 estimate for Netflix, split 72% device, 23% network and 5% data center; network energy per gigabyte has fallen since.</p>
+      </section>
+
+      <section>
+        <h2>Your own use</h2>
+        <p class="prose">This is arithmetic on the figures above, not a measurement of any one service.</p>
+        <div class="envbar">
+          <label for="envN">Prompts a day</label>
+          <input type="range" id="envN" min="1" max="300" step="1" value="20">
+          <output id="envNOut" for="envN">20</output>
+          <div class="seg" role="group" aria-label="Kind of prompt">
+            <button type="button" class="chip" id="envK1" data-kind="typical" aria-pressed="true">Typical prompts</button>
+            <button type="button" class="chip" id="envK2" data-kind="long" aria-pressed="false">Long reasoning queries</button>
+          </div>
+        </div>
+        <div class="stats" id="envYou" aria-live="polite"></div>
+      </section>
+
+      <section>
+        <h2>Energy per output token</h2>
+        <p class="prose">Published values span three orders of magnitude. The lowest are GPU-only measurements of open models on current hardware. The highest are outside estimates for reasoning models, where hidden reasoning tokens are charged to the visible ones.</p>
+        <div class="envbar" role="group" aria-label="Prompt shape for the third-party estimates">
+          <span>Prompt shape for the third-party estimates, here and in the water chart</span>
+          <div class="seg">
+            <button type="button" class="chip" id="envS1" data-size="short" aria-pressed="true">Short · 100 in, 300 out</button>
+            <button type="button" class="chip" id="envS2" data-size="medium" aria-pressed="false">Medium · 1,000 in, 1,000 out</button>
+            <button type="button" class="chip" id="envS3" data-size="long" aria-pressed="false">Long · 10,000 in, 1,500 out</button>
+          </div>
+        </div>
+        <div class="chart">
+          <div class="dp-legend" aria-hidden="true"><span><i class="dp-key k1"></i>Measured on hardware</span><span><i class="dp-key k2"></i>Reported by the provider</span><span><i class="dp-key k3"></i>Estimated by a third party</span><span><i class="dp-key hol"></i>No token count published; 300 output tokens assumed</span><span><i class="dp-key kw"></i>Reported range</span></div>
+          <div class="dp" id="envEnergy"></div>
+          <details class="tbl"><summary>Show as a table</summary><div class="tblwrap" id="envEnergyTable"></div></details>
+        </div>
+        <div class="convs">
+          <div><b>1 J per token = 0.28 kWh per million tokens</b><span>3.6 million joules make one kilowatt-hour.</span></div>
+          <div><b>1 µL per token = 1 litre per million tokens</b><span>The two units scale together exactly.</span></div>
+          <div><b>µL per token = J per token × L/kWh ÷ 3.6</b><span>Water follows from energy and the site's water intensity.</span></div>
+        </div>
+      </section>
+
+      <section>
+        <h2>Water per output token</h2>
+        <p class="prose">Counting only cooling water at the data center gives about 1 µL per token or less. Adding the water consumed to generate the electricity moves the same queries up by one to two orders of magnitude.</p>
+        <div class="chart">
+          <div class="dp-legend" aria-hidden="true"><span><i class="dp-key k2"></i>Reported by the provider</span><span><i class="dp-key k3"></i>Estimated by a third party</span><span><i class="dp-key hol"></i>No token count published; 300 output tokens assumed</span><span><i class="dp-key kw"></i>Reported range</span></div>
+          <div class="dp" id="envWater"></div>
+          <details class="tbl"><summary>Show as a table</summary><div class="tblwrap" id="envWaterTable"></div></details>
+        </div>
+      </section>
+
+      <section>
+        <h2>The same token at four facilities</h2>
+        <p class="prose">Hold the server energy fixed and the water figure depends mostly on whether electricity-generation water is counted. In the three profiles that report both, it is 6 to 32 times the cooling water.</p>
+        <div class="envbar">
+          <label for="envJ">Server energy per token (J)</label>
+          <input type="number" id="envJ" min="0.01" max="1000" step="0.01" value="1" inputmode="decimal">
+          <div class="seg">
+            <button type="button" class="chip" id="envJ1" data-j="0.15">0.15 · measured, 32B open model</button>
+            <button type="button" class="chip" id="envJ2" data-j="1">1</button>
+            <button type="button" class="chip" id="envJ3" data-j="3.7">3.7 · Microsoft's frontier-scale estimate</button>
+          </div>
+        </div>
+        <div class="chart">
+          <div class="dp-legend" aria-hidden="true"><span><i class="dp-key sq" style="background:var(--s4)"></i>Cooling water at the data center</span><span><i class="dp-key sq" style="background:var(--s5)"></i>Water consumed generating the electricity</span></div>
+          <div class="dp" id="envSites"></div>
+          <details class="tbl"><summary>Show as a table</summary><div class="tblwrap" id="envSitesTable"></div></details>
+        </div>
+      </section>
+
+      <section>
+        <h2>What these charts can't show</h2>
+        <div class="gaps">
+          <div><h3>Training</h3><p>No per-token figure here spreads the energy of training over the tokens served. Only Mistral used a life-cycle method, and its per-response number covers inference.</p></div>
+          <div><h3>Closed models</h3><p>No commercial provider publishes energy per token. Google and OpenAI give per-prompt figures without token counts. The third-party values are inferred from API speed and assumed hardware, not measured.</p></div>
+          <div><h3>Input versus output tokens</h3><p>Every per-token value divides a whole query's energy by its output tokens. No source separates the cost of reading the prompt from the cost of writing the answer.</p></div>
+          <div><h3>Utilisation and batching</h3><p>ML.ENERGY measures a 3 to 5 times change in energy per token from batch size alone, and a median 35% reduction moving from H100 to B200 GPUs. A GPU at full load and a half-idle fleet are different quantities.</p></div>
+          <div><h3>Cached tokens</h3><p>No published measurement covers the energy of a cache read. Providers price cache reads at a fraction of fresh input, which is the only available proxy.</p></div>
+          <div><h3>Agents</h3><p>Long tool-using sessions with many short outputs are not represented. Microsoft's long-query estimate of 3.91 Wh is the closest published point.</p></div>
+        </div>
+      </section>
+
+      <section>
+        <h2>Sources</h2>
+        <div class="tblwrap">
+          <table class="srcs">
+            <thead><tr><th>Source</th><th>What it reports</th><th>What it counts</th></tr></thead>
+            <tbody>
+              <tr><td><a href="https://arxiv.org/abs/2601.22076">ML.ENERGY, "Where Do the Joules Go?" (Jan 2026)</a></td><td>Qwen 3 32B on one B200: 0.151 J/token (chat, batch 512), 0.209 (batch 128), 0.312 (reasoning tasks). Qwen 3 235B on four B200s: about 0.4 J/token.</td><td>GPU energy only, at steady state. No server, idle or cooling overhead.</td></tr>
+              <tr><td><a href="https://arxiv.org/abs/2310.03003">Samsi et al., "From Words to Watts" (2023)</a></td><td>LLaMA 65B: roughly 3 to 4 J per output token.</td><td>GPU energy on 2023-era hardware.</td></tr>
+              <tr><td><a href="https://arxiv.org/abs/2509.20241">Oviedo et al., Microsoft, in <i>Joule</i> (2026)</a></td><td>Median 0.31 Wh per query (interquartile range 0.16 to 0.60) at about 300 output tokens; 3.91 Wh (2.15 to 7.05) for long queries of about 5,000 output tokens. Water: 0.0 to 0.067 mL per typical query.</td><td>Modelled for models above 200B parameters on H100 nodes. Water is cooling water.</td></tr>
+              <tr><td><a href="https://arxiv.org/abs/2508.15734">Google, "Measuring the environmental impact of delivering AI at Google scale" (Aug 2025)</a></td><td>Median Gemini Apps text prompt, May 2025: 0.24 Wh, of which 0.14 Wh is active AI accelerators; 0.26 mL water. No token count.</td><td>Accelerators, host CPU and memory, idle machines and overhead (PUE 1.09). Water is on-site at 1.15 L/kWh. Training and networking excluded.</td></tr>
+              <tr><td><a href="https://blog.samaltman.com/the-gentle-singularity">Sam Altman, "The Gentle Singularity" (June 2025)</a></td><td>Average ChatGPT query: about 0.34 Wh and 0.000085 gallons (0.32 mL) of water. No token count.</td><td>Not stated.</td></tr>
+              <tr><td><a href="https://mistral.ai/news/our-contribution-to-a-global-environmental-standard-for-ai">Mistral, life-cycle analysis of Large 2 (July 2025)</a></td><td>A 400-token response: 45 mL water and 1.14 g CO₂e. Energy not stated.</td><td>Life-cycle method, marginal impact of inference.</td></tr>
+              <tr><td><a href="https://arxiv.org/abs/2505.09598">Jegham et al., "How Hungry is AI?" (v5, Nov 2025)</a></td><td>Wh per query for 30 models at three prompt shapes, with assumed PUE and water factors per host. Eleven models are plotted here.</td><td>Inferred from API latency and throughput with assumed hardware and utilisation, including PUE. Water is derived here from its factors.</td></tr>
+              <tr><td><a href="https://www.iea.org/commentaries/the-carbon-footprint-of-streaming-video-fact-checking-the-headlines">IEA, "The carbon footprint of streaming video" (Dec 2020)</a></td><td>About 0.077 kWh per hour of Netflix streaming in 2019: 72% viewing device, 23% networks, 5% data centers. A phone on Wi-Fi with SD video: 0.037 kWh per hour.</td><td>Device, network and data center, global average, 2019 data.</td></tr>
+              <tr><td>Google (2009), and <a href="https://arxiv.org/abs/2407.16894">arXiv 2407.16894</a> (2024)</td><td>0.0003 kWh per search in 2009; about 0.00004 kWh per search in the 2024 recalculation.</td><td>Google's servers only. The 2024 value is an independent estimate, not a Google figure.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="keynote">Compiled 19 November 2026. Per-token values are derived on this page unless a source states them directly.</p>
+      </section>
+      <div class="next"><a href="#education">Test yourself in Education →</a><a href="#world">See where the campuses are</a></div>
+    </div>
+  </div>
+
+  <!-- ═══ Humans (coming soon) ═══ -->
+  <div class="view gutter" id="v-humans" data-view="humans" hidden>
+    <div class="col">
+      <div>
+        <p class="eyebrow">Coming soon</p>
+        <h1>The changing role of humans in the economy</h1>
+        <p class="lede">The rest of this site follows chips, power and money. This section will follow people: what happens to thinking, work and identity as more of the economy runs on machines.</p>
+      </div>
+      <div class="soon">
+        <div class="soon-card"><span class="tag">Coming soon</span><h3>Human cognition</h3><p>How people think, learn and decide when an AI is always within reach.</p></div>
+        <div class="soon-card"><span class="tag">Coming soon</span><h3>Labor</h3><p>Which work moves to machines, which stays with people, and what people are paid for.</p></div>
+        <div class="soon-card"><span class="tag">Coming soon</span><h3>Self-perception</h3><p>How people see themselves and their worth when machines can do more of what they do.</p></div>
+      </div>
+      <div class="next"><a href="#bci">Read now: brain-computer interfaces →</a><a href="#overview">Back to the overview</a></div>
+    </div>
+  </div>
+
+  <!-- ═══ Brain-computer interfaces ═══ -->
+  <div class="view gutter" id="v-bci" data-view="bci" hidden>
+    <div class="col">
+      <div>
+        <p class="eyebrow">Humans · Brain-computer interfaces</p>
+        <h1>Brains connecting to machines</h1>
+        <p class="lede">A brain-computer interface (BCI) passes information between neurons and a device, in both directions. After more than 50 years of lab research, companies have raised billions of dollars to bring it to patients. So far the devices restore lost abilities, such as letting a paralysed person type by thought.</p>
+      </div>
+      <div class="stats">
+        <div class="stat"><span class="v">50+ years</span><span class="k">Of research on humans and animals before today's companies</span></div>
+        <div class="stat"><span class="v">~38</span><span class="k">People implanted with Blackrock Neurotech arrays, the most of any company</span></div>
+        <div class="stat"><span class="v">8.5 years</span><span class="k">Longest-running Utah Array implant</span></div>
+        <div class="stat"><span class="v">10</span><span class="k">People with Synchron's Stentrode, several of whom text by thought</span></div>
+      </div>
+
+      <section>
+        <h2>Where the electrodes sit</h2>
+        <p class="prose">BCIs use electrodes to pick up the electrical activity of neurons. The closer an electrode gets to the neurons, the fewer of them it hears at once and the clearer the signal, but the more surgery it takes to put it there.</p>
+        <div class="figwrap">
+          <div class="seg" role="group" aria-label="Choose a device">
+            <button type="button" class="chip" id="bciD1" data-devbtn="eeg" aria-pressed="false"><i style="background:var(--s3)"></i>EEG sensors</button>
+            <button type="button" class="chip" id="bciD2" data-devbtn="ecog" aria-pressed="false"><i style="background:var(--s1)"></i>ECoG grid</button>
+            <button type="button" class="chip" id="bciD3" data-devbtn="stent" aria-pressed="false"><i style="background:var(--s1)"></i>Endovascular stent</button>
+            <button type="button" class="chip" id="bciD4" data-devbtn="micro" aria-pressed="true"><i style="background:var(--s2)"></i>Microelectrodes</button>
+          </div>
+          <div class="bci-two">
+            <div class="figscroll" id="bciWhere"></div>
+            <div class="bci-card" id="bciWhereCard" aria-live="polite"></div>
+          </div>
+          <p class="figcap"><b>Figure 1.</b> A slice through the head, from scalp to brain. Hover or tap a device to see which neurons (triangles) it can hear. A schematic, not to scale.</p>
+        </div>
+      </section>
+
+      <section>
+        <h2>Spike sorting: telling neurons apart</h2>
+        <p class="prose">An electrode in brain tissue hears several neurons at once. Software removes the noise, then uses the height, shape and timing of each voltage spike to work out which neuron fired. Once each neuron's activity is known, it can be matched to an intention, such as moving a cursor and clicking. This step applies to microelectrodes, not to every kind of BCI.</p>
+        <div class="figwrap">
+          <div class="ctrlbar">
+            <button type="button" class="chip" id="bciSortBtn" aria-pressed="false">Sort the spikes</button>
+            <div class="envbar"><label for="bciNoise">Noise</label><input type="range" id="bciNoise" min="2" max="40" step="1" value="6"></div>
+          </div>
+          <div class="figscroll" id="bciSort"></div>
+          <div class="sortkey" id="bciSortKey"></div>
+          <p class="figcap" id="bciSortNote" aria-live="polite"></p>
+          <p class="figcap"><b>Figure 2.</b> A simulated recording from one electrode near three neurons. The signal is generated for illustration, not recorded from a brain.</p>
+        </div>
+      </section>
+
+      <section>
+        <h2>From a galvanometer to clinical trials</h2>
+        <div class="figwrap">
+          <div class="tl" id="bciTime"></div>
+          <p class="figcap"><b>Figure 3.</b> Milestones in brain-computer interfaces, 1875 to 2025.</p>
+        </div>
+      </section>
+
+      <section>
+        <h2>The company landscape</h2>
+        <p class="prose">About a dozen companies are developing implanted hardware, and many more make headsets. EEG products are already on sale. The implanted systems cost more, need surgery and are reserved for medical use for now.</p>
+        <div class="land" id="bciLand"></div>
+        <p class="figcap"><b>Figure 4.</b> Companies by where their electrodes sit, following the 2025 landscape figure. Numbers are people implanted, updated where 2026 reports changed them. Hover a company for details.</p>
+        <div class="chart">
+          <div class="chart-head"><h3>People implanted, by company</h3><p>From the 2025 figure, updated with 2026 reports. Precision's count is temporary placements during surgery.</p></div>
+          <div class="legend-row"><span><i style="background:var(--s2)"></i>In brain tissue</span><span><i style="background:var(--s1)"></i>Minimally invasive</span></div>
+          <div class="bars" id="bciPeople"></div>
+          <details class="tbl"><summary>Show as a table</summary><div class="tblwrap" id="bciPeopleTable"></div></details>
+        </div>
+      </section>
+
+      <section>
+        <h2>Company radar and the big news</h2>
+        <p class="prose">Every company from the landscape as a dot, from lab work on the left to products on sale on the right. A ring marks a company with big news in the last 12 months. Click a dot to see the company and its news.</p>
+        <div class="figwrap">
+          <div class="radarkey">
+            <div class="seg" role="group" aria-label="Highlight a category">
+              <button type="button" class="chip" id="bciR0" data-rcat="all" aria-pressed="true">All</button>
+              <button type="button" class="chip" id="bciR1" data-rcat="tis" aria-pressed="false"><i style="background:var(--s2)"></i>In brain tissue</button>
+              <button type="button" class="chip" id="bciR2" data-rcat="min" aria-pressed="false"><i style="background:var(--s1)"></i>Minimally invasive</button>
+              <button type="button" class="chip" id="bciR3" data-rcat="ext" aria-pressed="false"><i style="background:var(--s3)"></i>Non-invasive</button>
+            </div>
+            <span class="ringkey"><i></i>Big news in the last 12 months</span>
+          </div>
+          <div class="bci-two">
+            <div class="figscroll" id="bciRadar"></div>
+            <div class="bci-card" id="bciRadarCard" aria-live="polite"></div>
+          </div>
+          <p class="figcap"><b>Figure 5.</b> Company radar, November 2026. Stages are assigned from public reports of how many people have received each device. Neuracle, Merge Labs and Meta were added to the companies in the 2025 figure.</p>
+        </div>
+        <h3>Big news by category</h3>
+        <div class="newsgrid" id="bciNews"></div>
+        <p class="keynote">News from the last 18 months, checked by web search on 20 November 2026. Several items come from trade press and industry trackers and haven't been checked against company statements.</p>
+      </section>
+
+      <section>
+        <h2>Precision costs invasiveness</h2>
+        <div class="figwrap">
+          <div class="figscroll" id="bciMap"></div>
+          <p class="figcap"><b>Figure 6.</b> The trade-off that shapes the industry. Each step toward a clearer signal means more surgery and more cost.</p>
+        </div>
+      </section>
+
+      <section>
+        <h2>What patients can do today</h2>
+        <div class="roles">
+          <div class="role"><h3>Text and email by thought</h3><p>Synchron asks patients to imagine movements, such as a hand moving or clicking, and records the brain activity. It builds a dictionary from activity to intention, so a paralysed person can control a computer again.</p><p class="ex">Synchron · 10 participants</p></div>
+          <div class="role"><h3>Control a cursor and design in 3D</h3><p>Neuralink's first human implant was in 2024. Participants have shown cursor control and 3D object manipulation by thought. The company also aims to restore speech, and sight through its Blindsight project.</p><p class="ex">Neuralink · at least 7 participants by 2025</p></div>
+          <div class="role"><h3>Live with an implant for years</h3><p>Blackrock's Utah Array has the longest record in people, across many research groups. One implant has stayed active for 8.5 years.</p><p class="ex">Blackrock Neurotech · about 38 participants</p></div>
+        </div>
+        <p class="figcap"><b>Figure 7.</b> Three examples of what implanted systems do for patients today.</p>
+      </section>
+
+      <section>
+        <h2>What holds it back</h2>
+        <div class="gaps">
+          <div><h3>The body fights the implant</h3><p>Protective glia cells wrap around foreign objects they can't break down, including electrodes, and the signal weakens. New materials that mimic brain tissue reduce this reaction.</p></div>
+          <div><h3>Precision against lifetime</h3><p>Fine electrodes that hear single neurons tend to degrade faster than large ones. The draft treats durability past 5 to 10 years as a limit; one reviewer countered that implants have already lasted 7 years or more.</p></div>
+          <div><h3>Data, power and heat</h3><p>More channels mean more data to send, more power to supply and more heat to remove, all inside the skull.</p></div>
+          <div><h3>Headsets hear through bone</h3><p>Non-invasive methods are safer, but the skull weakens and smears the signal, so their resolution is poor.</p></div>
+          <div><h3>Reading comes before writing</h3><p>Most systems today read from the brain. Writing to it, as in vision restoration, is earlier. Non-invasive writing uses magnetic or ultrasound stimulation.</p></div>
+          <div><h3>Privacy and agency</h3><p>Who owns brain data, and who is acting when software sits between intention and action? Regulators have begun to discuss "neurorights".</p></div>
+        </div>
+      </section>
+
+      <section>
+        <h2>Where it could go</h2>
+        <div class="prose">
+          <p>Today's devices restore what was lost. The same technology could later be used for enhancement: handing arithmetic to a machine, asking an AI a question by thinking it, or receiving sight and sound directly.</p>
+          <p><b>These are speculations, not forecasts.</b> They would need fast two-way links with far more bandwidth than exists today, and nobody knows how a brain would adapt to a constant flow of injected information. The article's authors disagree among themselves about how far off this is; one puts direct streaming of senses decades away at least.</p>
+        </div>
+      </section>
+      <p class="keynote">Adapted from the draft commentary "Brains connecting to the Future" by Dorian Leger and Andrii Buvailo, written for npj Digital Medicine in 2025, and its reviewers' notes. Figures are redrawn from the draft and from the 2025 landscape figure by Dorian Leger. News items were checked by web search on 20 November 2026.</p>
+      <div class="next"><a href="#humans">Humans: more coming soon</a><a href="#education">Test yourself in Education →</a></div>
+    </div>
+  </div>
+
+  <!-- ═══ Education ═══ -->
+  <div class="view gutter" id="v-education" data-view="education" hidden>
+    <div class="col">
+      <div>
+        <p class="eyebrow">Education</p>
+        <h1>Learn the AI value chain</h1>
+        <p class="lede">Three levels of diagrams to solve, questions and calculations. Every answer comes with a short explanation and a link to the page that covers it.</p>
+      </div>
+      <div class="lv-tabs" id="learnTabs" role="group" aria-label="Level"></div>
+      <div class="learn" id="learnBody"></div>
+      <p class="keynote">Your progress is saved in this browser only. Questions marked Environment draw on the Environment page; the rest draw on the map and the research decks.</p>
+    </div>
+  </div>
+</main>
+
+<footer class="gutter">
+  <div class="col">
+    <p id="credit"></p>
+    <p>Figures are 2025 or the nearest fiscal year, as reported in the research decks. "≈" marks estimates. Fiscal years differ between companies, so compare them loosely.</p>
+  </div>
+</footer>
+
+<aside class="drawer" id="drawer" aria-live="polite">
+  <button class="close" id="close" aria-label="Close panel">×</button>
+  <div id="panel"></div>
+</aside>
+<div id="tip" role="tooltip"></div>
+<div id="ctip" role="tooltip" hidden></div>
+
+<script src="data.js"></script>
+<script src="map.js"></script>
+<script src="news-data.js"></script>
+<script src="newsradar.js"></script>
+<script src="world.js"></script>
+<script src="sites-data.js"></script>
+<script src="geo.js"></script>
+<script src="env.js"></script>
+<script src="learn.js"></script>
+<script src="bci.js"></script>
+<script src="inference-data.js"></script>
+<script src="infer.js"></script>
+<script>
+(() => {
+  const VC = window.VC;
+  const byId = Object.fromEntries(VC.stages.map(s => [s.id, s]));
+  const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+
+  // ── Charts (values in US$ billions, as stated in the research decks) ──
+  const PHASES = { s1: "Chips & hardware", s2: "Data centers & cloud", s3: "Models & apps" };
+  const CHARTS = {
+    "chart-overview": {
+      title: "2025 revenue at points along the chain", note: "US$ billions. Fiscal years vary; Azure is a lower bound.", legend: true,
+      rows: [
+        ["Nvidia", 215.9, "s1", "FY2026, ending Jan 2026"], ["AWS", 128.7, "s2", "Amazon's cloud segment"],
+        ["TSMC", 119.9, "s1", "Converted from NT$3.8T"], ["Microsoft Azure", 75, "s2", "FY2025, $75B+"],
+        ["Broadcom", 63.8, "s1", "FY2025"], ["Google Cloud", 57.8, "s2", "FY2025"],
+        ["Micron", 37.4, "s1", "FY2025, ending Aug 2025"], ["OpenAI", 13.1, "s3", "CY2025"],
+        ["Equinix", 9.2, "s2", "FY2025"], ["Anthropic", 5.5, "s3", "CY2025, ≈"],
+        ["CoreWeave", 5.1, "s2", "CY2025"], ["Palantir", 4.5, "s3", "CY2025"],
+      ],
+    },
+    "chart-chips": {
+      title: "Chip company revenue, 2025", note: "US$ billions. ASML (€32.7B) is left out because it reports in euros.",
+      rows: [
+        ["Nvidia", 215.9, "s1", "FY2026, ending Jan 2026"], ["TSMC", 119.9, "s1", "Converted from NT$3.8T"],
+        ["Broadcom", 63.8, "s1", "FY2025"], ["Intel", 52.9, "s1", "CY2025"], ["Micron", 37.4, "s1", "FY2025"],
+        ["SanDisk", 8.9, "s1", "CY2025"], ["YMTC", 8.8, "s1", "FY2025, as stated in the deck"],
+        ["GlobalFoundries", 6.8, "s1", "FY2025"], ["Cambricon", 0.91, "s1", "≈, up 453%"],
+        ["Astera Labs", 0.85, "s1", "FY2025"], ["Cerebras", 0.51, "s1", "CY2025, up 76%"],
+      ],
+    },
+    "chart-cloud": {
+      title: "Cloud revenue, 2025", note: "US$ billions. Oracle shows infrastructure (IaaS) only; Azure is a lower bound.",
+      rows: [
+        ["AWS", 128.7, "s2", "Up 20%"], ["Microsoft Azure", 75, "s2", "FY2025, $75B+, up 34%"],
+        ["Google Cloud", 57.8, "s2", "FY2025"], ["Oracle OCI", 13.1, "s2", "IaaS, up 50%+"],
+        ["CoreWeave", 5.1, "s2", "GPU-specialist cloud"], ["OVHcloud", 1.17, "s2", "€1.08B, converted in the deck"],
+      ],
+    },
+    "chart-equinix": {
+      title: "Equinix revenue by source, 2025", note: "US$ billions, of $9.217B total. \"Other\" is the remainder.",
+      rows: [
+        ["Colocation", 6.48, "s2", "Space and power, ≈70%"], ["Interconnection", 1.66, "s2", "Cross-connects, ≈18%"],
+        ["Other", 1.08, "s2", "Remainder, ≈12%"],
+      ],
+    },
+    "chart-labs": {
+      title: "Model lab revenue, 2025", note: "US$ billions. Calendar 2025, ≈ estimates where the deck says so.",
+      rows: [
+        ["OpenAI", 13.1, "s3", "Exit run-rate ≈$20B"], ["Anthropic", 5.5, "s3", "Run-rate $1B → $9B"],
+        ["xAI", 0.5, "s3", "Standalone, ≈"], ["Mistral AI", 0.2, "s3", "≈"],
+        ["Cohere", 0.18, "s3", "$240M ARR at year end"], ["Zhipu AI", 0.105, "s3", "Up 132%"],
+      ],
+    },
+  };
+
+  const fmt = v => v >= 10 ? `$${v.toFixed(1)}B` : v >= 1 ? `$${v.toFixed(2).replace(/0$/, "")}B` : `$${Math.round(v * 1000)}M`;
+  const ctip = document.getElementById("ctip");
+
+  function drawChart(id) {
+    const c = CHARTS[id], host = document.getElementById(id);
+    if (!c || !host) return;
+    const max = Math.max(...c.rows.map(r => r[1]));
+    const used = [...new Set(c.rows.map(r => r[2]))];
+    host.innerHTML = `
+      <div class="chart-head"><h3>${esc(c.title)}</h3><p>${esc(c.note)}</p></div>
+      ${c.legend ? `<div class="legend-row">${used.map(k => `<span><i style="background:var(--${k})"></i>${PHASES[k]}</span>`).join("")}</div>` : ""}
+      <div class="bars" role="list">
+        ${c.rows.map(([name, v, k, note]) => `
+          <span class="lab" title="${esc(name)}">${esc(name)}</span>
+          <span class="btrack" role="listitem" tabindex="0" data-name="${esc(name)}" data-v="${v}" data-note="${esc(note)}" aria-label="${esc(name)}: ${fmt(v)}. ${esc(note)}">
+            <span class="bfill ${k}" style="width:calc(${(v / max * 100).toFixed(2)}% - ${(v / max * 64).toFixed(1)}px)"></span>
+            <span class="val">${fmt(v)}</span>
+          </span>`).join("")}
+      </div>
+      <details class="tbl"><summary>Show as a table</summary>
+        <div class="tblwrap"><table><thead><tr><th>Company</th><th class="r">US$</th><th>Note</th></tr></thead>
+        <tbody>${c.rows.map(([n, v, , note]) => `<tr><td>${esc(n)}</td><td class="r">${fmt(v)}</td><td>${esc(note)}</td></tr>`).join("")}</tbody></table></div>
+      </details>`;
+    host.querySelectorAll(".btrack").forEach(t => {
+      const show = (x, y) => {
+        ctip.innerHTML = `<b>${t.dataset.name}</b><span class="num">${fmt(+t.dataset.v)}</span><br>${t.dataset.note}`;
+        ctip.hidden = false;
+        const r = ctip.getBoundingClientRect();
+        ctip.style.left = Math.min(x + 14, innerWidth - r.width - 8) + "px";
+        ctip.style.top = Math.min(y + 14, innerHeight - r.height - 8) + "px";
+      };
+      t.addEventListener("mousemove", e => show(e.clientX, e.clientY));
+      t.addEventListener("mouseleave", () => (ctip.hidden = true));
+      t.addEventListener("focus", () => { const r = t.getBoundingClientRect(); show(r.left + 40, r.top); });
+      t.addEventListener("blur", () => (ctip.hidden = true));
+    });
+  }
+  Object.keys(CHARTS).forEach(drawChart);
+
+  // ── Chokepoints (from the map's stage data) ──
+  const LEVELS = ["open", "some friction", "tight", "severe", "single point of failure"];
+  document.getElementById("chokes").innerHTML = VC.stages
+    .filter(s => s.choke && s.choke.level >= 3)
+    .sort((a, b) => b.choke.level - a.choke.level || a.col - b.col)
+    .map(s => `<div class="choke"><i style="background:var(--c${s.choke.level})"></i><b>${esc(s.title)} · ${LEVELS[s.choke.level]}</b><span>${esc(s.choke.note)}</span></div>`)
+    .join("");
+
+  // ── Company directories (from data.js) ──
+  const regOrder = Object.keys(VC.regions);
+  // A company's revenue line is shown once, at the stage it describes.
+  const REV_AT = { amazon: "hyperscalers", google: "hyperscalers", microsoft: "hyperscalers", alibaba: "hyperscalers", meta: "openw" };
+  const revHere = (c, sid) => c.rev && (REV_AT[c.id] || Object.keys(c.at)[0]) === sid;
+  const cosAt = sid => VC.companies.filter(c => c.at[sid])
+    .sort((a, b) => revHere(b, sid) - revHere(a, sid) || regOrder.indexOf(a.region) - regOrder.indexOf(b.region) || a.name.localeCompare(b.name));
+  document.querySelectorAll("[data-dir]").forEach(host => {
+    host.innerHTML = host.dataset.dir.split(",").map(sid => {
+      const s = byId[sid], cos = cosAt(sid);
+      return `<div class="dir-card"><h3>${esc(s.title)}<span class="num">${cos.length}</span></h3><p>${esc(s.sub)}</p>
+        <ul>${cos.map(c => `<li title="${esc(c.at[sid])}"><i style="background:${VC.regions[c.region].color}"></i><span>${esc(c.name)}</span>${revHere(c, sid) ? `<small>${esc(c.rev)}</small>` : ""}</li>`).join("")}</ul></div>`;
+    }).join("");
+  });
+  document.querySelectorAll("[data-regkey]").forEach(h => {
+    h.innerHTML = regOrder.map(k => `<span><i style="background:${VC.regions[k].color}"></i>${esc(VC.regions[k].label)}</span>`).join("") +
+      `<span style="color:var(--muted)">Hover a name for its role. Figures from the research decks.</span>`;
+  });
+
+  // ── Credit ──
+  const nRes = VC.companies.filter(c => c.src === "research").length;
+  document.getElementById("credit").textContent =
+    `${VC.research.credit}: the "AI chain value" decks (general, hardware, real estate). ${nRes} of the ${VC.companies.length} companies here have figures from that research; the rest are seed data that hasn't been verified yet.`;
+
+  // ── Routing ──
+  const VIEWS = ["overview", "map", "chips", "datacenters", "world", "inside", "models", "inference", "environment", "humans", "bci", "education"];
+  // The 3D model loads three.js only when its page is first opened.
+  let dcLoad = null;
+  const loadScript = src => new Promise((res, rej) => { const s = document.createElement("script"); s.src = src; s.onload = res; s.onerror = rej; document.body.appendChild(s); });
+  const loadDC = () => dcLoad || (dcLoad = loadScript("https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js").catch(() => {}).then(() => loadScript("dc3d.js")));
+  function route() {
+    const name = VIEWS.includes(location.hash.slice(1)) ? location.hash.slice(1) : "overview";
+    document.querySelectorAll("[data-view]").forEach(v => (v.hidden = v.dataset.view !== name));
+    document.querySelectorAll("nav a").forEach(a => { if (a.getAttribute("href") === "#" + name) a.setAttribute("aria-current", "page"); else a.removeAttribute("aria-current"); });
+    document.querySelector("footer").hidden = name === "map";
+    if (name === "map") requestAnimationFrame(() => window.VCMap && VCMap.mount());
+    else if (window.VCMap) VCMap.closeDrawer();
+    if (name === "inside") loadDC().then(() => requestAnimationFrame(() => window.VCDC && VCDC.mount()));
+    else if (window.VCDC) VCDC.pause();
+    ctip.hidden = true;
+    window.scrollTo(0, 0);
+  }
+  addEventListener("hashchange", route);
+  route();
+})();
+</script>
+
+</html>
