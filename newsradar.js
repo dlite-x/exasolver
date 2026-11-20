@@ -32,13 +32,14 @@
   items.sort((a, b) => keys.indexOf(a.s) - keys.indexOf(b.s) || b.d.localeCompare(a.d)).forEach((x, i) => (x.n = i + 1));
 
   host.innerHTML = `<svg viewBox="0 0 ${W} ${H}" role="group" aria-label="Radar of ${items.length} AI news items. Slices are topics; rings show how recent each item is, newest in the middle.">
+    <circle class="nr-scope" cx="${CX}" cy="${CY}" r="${RINGS[2].r1}"></circle>
     ${keys.map((k, i) => `<path class="nr-wedge" d="${wedge(RINGS[2].r1, -90 + i * SL, -90 + (i + 1) * SL)}" fill="${D.sectors[k].color}"></path>`).join("")}
     ${RINGS.map((r, i) => `<circle class="nr-ring" cx="${CX}" cy="${CY}" r="${r.r1}"></circle><text class="nr-rl" x="${CX}" y="${CY - r.r1 + 13}" text-anchor="middle">${r.name}</text>`).join("")}
     ${keys.map((k, i) => { const [x0, y0] = pol(RINGS[2].r1 + 4, -90 + i * SL + 1.2), [x1, y1] = pol(RINGS[2].r1 + 4, -90 + (i + 1) * SL - 1.2); return `<path class="nr-arc" d="M${x0.toFixed(1)},${y0.toFixed(1)}A${RINGS[2].r1 + 4},${RINGS[2].r1 + 4} 0 0 1 ${x1.toFixed(1)},${y1.toFixed(1)}" stroke="${D.sectors[k].color}"></path>`; }).join("")}
     ${keys.map((k, i) => { const [x, y] = pol(RINGS[2].r1, -90 + i * SL); return `<line class="nr-sep" x1="${CX}" y1="${CY}" x2="${x.toFixed(1)}" y2="${y.toFixed(1)}"></line>`; }).join("")}
     ${keys.map((k, i) => { const mid = -90 + (i + 0.5) * SL, [x, y] = pol(RINGS[2].r1 + 20, mid), c = Math.cos(mid * Math.PI / 180);
       return `<text class="nr-sl" x="${x.toFixed(1)}" y="${(y + (Math.sin(mid * Math.PI / 180) > 0.3 ? 12 : 4)).toFixed(1)}" text-anchor="${c > 0.3 ? "start" : c < -0.3 ? "end" : "middle"}">${esc(D.sectors[k].name)}</text>`; }).join("")}
-    <g class="nr-sweep" aria-hidden="true" style="transform-origin:${CX}px ${CY}px">${Array.from({ length: 16 }, (_, i) => `<path d="${wedge(RINGS[2].r1, -90 - (i + 1) * 3, -90 - i * 3 + 0.4)}" opacity="${(0.2 * (1 - i / 16) ** 1.5).toFixed(3)}"></path>`).join("")}<line x1="${CX}" y1="${CY}" x2="${CX}" y2="${CY - RINGS[2].r1}"></line></g>
+    <g class="nr-sweep" aria-hidden="true" style="transform-origin:${CX}px ${CY}px">${Array.from({ length: 48 }, (_, i) => `<path d="${wedge(RINGS[2].r1, -90 - (i + 1) * 1.5, -90)}"></path>`).join("")}<line x1="${CX}" y1="${CY}" x2="${CX}" y2="${CY - RINGS[2].r1}"></line></g>
     <circle class="nr-hub" cx="${CX}" cy="${CY}" r="26"></circle><text class="nr-now" x="${CX}" y="${CY + 4}" text-anchor="middle">Now</text>
     ${items.map(x => `<g class="nr-dot" data-n="${x.n}" tabindex="0" role="button" aria-label="${x.n}. ${esc(x.h)}, ${fmtD(x.d)}, ${esc(D.sectors[x.s].name)}" style="--dc:${D.sectors[x.s].color}">
       <circle class="nr-ping" cx="${x.xy[0].toFixed(1)}" cy="${x.xy[1].toFixed(1)}" r="21" style="animation-delay:${(((Math.atan2(x.xy[1] - CY, x.xy[0] - CX) * 180 / Math.PI + 450) % 360) / 360 - 1) * TURN}s"></circle>
