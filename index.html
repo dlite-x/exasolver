@@ -542,10 +542,18 @@
   .nr-hub { fill: var(--surface); stroke: var(--edge); stroke-width: 1; }
   .nr-now { font: 600 11px var(--font-body); fill: var(--ink-2); }
   .nr-dot { cursor: pointer; outline: none; }
-  .nr-dot circle { fill: var(--surface); stroke: var(--dc); stroke-width: 2.5; }
+  .nr-dot .nr-body { fill: var(--surface); stroke: var(--dc); stroke-width: 2.5; }
+  /* A slow sweep, like a ship's radar; each dot glows briefly as the line passes it */
+  .nr-sweep { pointer-events: none; animation: nr-turn 36s linear infinite; }
+  .nr-sweep path { fill: var(--accent); }
+  .nr-sweep line { stroke: var(--accent); stroke-width: 1.6; opacity: .8; }
+  .nr-ping { fill: var(--dc); opacity: 0; pointer-events: none; animation: nr-ping 36s linear infinite; }
+  @keyframes nr-turn { to { transform: rotate(360deg); } }
+  @keyframes nr-ping { 0% { opacity: .55; } 12% { opacity: 0; } 100% { opacity: 0; } }
+  @media (prefers-reduced-motion: reduce) { .nr-sweep { display: none; } .nr-ping { animation: none; } }
   .nr-dot text { font: 600 12px var(--font-mono); fill: var(--ink); pointer-events: none; }
-  .nr-dot.hl circle, .nr-dot:focus-visible circle { stroke-width: 4.5; }
-  .nr-dot.on circle { fill: var(--ink); stroke: var(--ink); }
+  .nr-dot.hl .nr-body, .nr-dot:focus-visible .nr-body { stroke-width: 4.5; }
+  .nr-dot.on .nr-body { fill: var(--ink); stroke: var(--ink); }
   .nr-dot.on text { fill: var(--surface); }
   .nr-side { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
   .nr-side .bci-card { min-height: 168px; font-size: 15px; }

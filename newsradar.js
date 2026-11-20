@@ -12,6 +12,7 @@
 
   const RINGS = [{ max: 30, r0: 44, r1: 132, name: "Last 30 days" }, { max: 92, r0: 132, r1: 204, name: "Last 3 months" }, { max: 366, r0: 204, r1: 268, name: "Last 12 months" }];
   const keys = Object.keys(D.sectors), SL = 360 / keys.length, CX = 340, CY = 322, W = 680, H = 650;
+  const TURN = 36; // seconds per sweep of the radar line; keep in step with the CSS animations
   const pol = (r, deg) => [CX + r * Math.cos(deg * Math.PI / 180), CY + r * Math.sin(deg * Math.PI / 180)];
   const wedge = (r, a0, a1) => { const [x0, y0] = pol(r, a0), [x1, y1] = pol(r, a1); return `M${CX},${CY}L${x0.toFixed(1)},${y0.toFixed(1)}A${r},${r} 0 0 1 ${x1.toFixed(1)},${y1.toFixed(1)}Z`; };
 
@@ -37,9 +38,11 @@
     ${keys.map((k, i) => { const [x, y] = pol(RINGS[2].r1, -90 + i * SL); return `<line class="nr-sep" x1="${CX}" y1="${CY}" x2="${x.toFixed(1)}" y2="${y.toFixed(1)}"></line>`; }).join("")}
     ${keys.map((k, i) => { const mid = -90 + (i + 0.5) * SL, [x, y] = pol(RINGS[2].r1 + 20, mid), c = Math.cos(mid * Math.PI / 180);
       return `<text class="nr-sl" x="${x.toFixed(1)}" y="${(y + (Math.sin(mid * Math.PI / 180) > 0.3 ? 12 : 4)).toFixed(1)}" text-anchor="${c > 0.3 ? "start" : c < -0.3 ? "end" : "middle"}">${esc(D.sectors[k].name)}</text>`; }).join("")}
+    <g class="nr-sweep" aria-hidden="true" style="transform-origin:${CX}px ${CY}px">${Array.from({ length: 16 }, (_, i) => `<path d="${wedge(RINGS[2].r1, -90 - (i + 1) * 3, -90 - i * 3 + 0.4)}" opacity="${(0.2 * (1 - i / 16) ** 1.5).toFixed(3)}"></path>`).join("")}<line x1="${CX}" y1="${CY}" x2="${CX}" y2="${CY - RINGS[2].r1}"></line></g>
     <circle class="nr-hub" cx="${CX}" cy="${CY}" r="26"></circle><text class="nr-now" x="${CX}" y="${CY + 4}" text-anchor="middle">Now</text>
     ${items.map(x => `<g class="nr-dot" data-n="${x.n}" tabindex="0" role="button" aria-label="${x.n}. ${esc(x.h)}, ${fmtD(x.d)}, ${esc(D.sectors[x.s].name)}" style="--dc:${D.sectors[x.s].color}">
-      <circle cx="${x.xy[0].toFixed(1)}" cy="${x.xy[1].toFixed(1)}" r="12.5"></circle><text x="${x.xy[0].toFixed(1)}" y="${(x.xy[1] + 4.2).toFixed(1)}" text-anchor="middle">${x.n}</text></g>`).join("")}
+      <circle class="nr-ping" cx="${x.xy[0].toFixed(1)}" cy="${x.xy[1].toFixed(1)}" r="21" style="animation-delay:${(((Math.atan2(x.xy[1] - CY, x.xy[0] - CX) * 180 / Math.PI + 450) % 360) / 360 - 1) * TURN}s"></circle>
+      <circle class="nr-body" cx="${x.xy[0].toFixed(1)}" cy="${x.xy[1].toFixed(1)}" r="12.5"></circle><text x="${x.xy[0].toFixed(1)}" y="${(x.xy[1] + 4.2).toFixed(1)}" text-anchor="middle">${x.n}</text></g>`).join("")}
   </svg>`;
 
   list.innerHTML = keys.map(k => `<div class="nl-group" style="--dc:${D.sectors[k].color}"><h3>${esc(D.sectors[k].name)}</h3>
