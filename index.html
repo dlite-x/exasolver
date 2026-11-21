@@ -874,7 +874,6 @@
             <div class="seg" role="group" aria-label="Show flows">
               <button type="button" class="chip" data-flow="power" aria-pressed="false"><i style="background:var(--c1)"></i>Follow the power</button>
               <button type="button" class="chip" data-flow="heat" aria-pressed="false"><i style="background:var(--c3)"></i>Follow the heat</button>
-              <button type="button" class="chip" data-flow="data" aria-pressed="false"><i style="background:var(--s3)"></i>Follow the data</button>
             </div>
             <div class="seg">
               <button type="button" class="chip" id="dcLabels" aria-pressed="true">Labels</button>
@@ -1465,7 +1464,7 @@
   // The 3D model loads three.js only when its page is first opened.
   let dcLoad = null;
   const loadScript = src => new Promise((res, rej) => { const s = document.createElement("script"); s.src = src; s.onload = res; s.onerror = rej; document.body.appendChild(s); });
-  const loadDC = () => dcLoad || (dcLoad = loadScript("https://cdn.jsdelivr.net/npm/three@0.158.0/build/three.min.js").then(() => loadScript("dcscene.js")).catch(() => {}).then(() => loadScript("dc3d.js")));
+  const loadDC = () => dcLoad || (dcLoad = loadScript("https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js").catch(() => {}).then(() => loadScript("dc3d.js")));
   function route() {
     const name = VIEWS.includes(location.hash.slice(1)) ? location.hash.slice(1) : "overview";
     document.querySelectorAll("[data-view]").forEach(v => (v.hidden = v.dataset.view !== name));
