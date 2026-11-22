@@ -413,6 +413,7 @@ window.VC.companies.push(
   { id: "cyrusone", name: "CyrusOne", region: "US", at: { developers: "Hyperscale campuses (KKR/GIP)" }, rev: "≈$1.8–2.2B (est.)" },
   { id: "coresite", name: "CoreSite", region: "US", at: { developers: "Colocation (American Tower)" }, rev: "≈$1.1B (2025)" },
   { id: "data4", name: "Data4", region: "EU", at: { developers: "Hyperscale campuses (Brookfield)" }, rev: "≈€300–350M (est.)" },
+  { id: "opcore", name: "OpCore", region: "EU", country: "France", at: { developers: "Iliad's data center platform, sister of Scaleway" }, rev: "15 facilities, 170 MW secured" },
   { id: "virtus", name: "Virtus", region: "EU", at: { developers: "Colocation" }, rev: "≈£200–250M (est.)" },
   { id: "yondr", name: "Yondr", region: "EU", at: { developers: "Hyperscale campuses" }, rev: "≈$150–250M (est.)" },
   { id: "stt", name: "ST Telemedia GDC", region: "OTHER", country: "Singapore", at: { developers: "Colocation, 1.7 GW platform" }, rev: "≈$1.4–1.8B (est.)" },

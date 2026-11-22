@@ -153,10 +153,10 @@
 
   /* Chokepoints list */
   .chokes { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 10px; }
-  .choke { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; display: grid; grid-template-columns: 6px 1fr; gap: 4px 12px; min-width: 0; }
-  .choke i { grid-row: 1 / 3; border-radius: 3px; }
-  .choke b { font-family: var(--font-display); font-size: 15px; }
-  .choke span { font-size: 14px; color: var(--ink-2); line-height: 1.45; }
+  .chokecard { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; display: grid; grid-template-columns: 6px 1fr; gap: 4px 12px; min-width: 0; }
+  .chokecard i { grid-row: 1 / 3; border-radius: 3px; }
+  .chokecard b { font-family: var(--font-display); font-size: 15px; }
+  .chokecard span { font-size: 14px; color: var(--ink-2); line-height: 1.45; }
 
   /* Company directory */
   .dir { columns: 3 280px; column-gap: 12px; }
@@ -575,6 +575,35 @@
   .nl-d { font-size: 12px; color: var(--muted); white-space: nowrap; }
   @media (max-width: 900px) { .nr-grid { grid-template-columns: 1fr; } }
 
+  /* Chips: inside a rack (3D) */
+  .rk { display: flex; flex-direction: column; gap: 18px; }
+  .rk .dc-list { grid-template-columns: 1fr 1fr; gap: 3px 10px; }
+  .rk .dc-card .chip { align-self: flex-start; }
+
+  /* Training page */
+  .nn-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; align-items: start; }
+  .nn-grid h3, .lm-grid h3 { font-size: 14px; margin-bottom: 8px; }
+  #nnNet, #nnLoss, #lmLoss { display: block; width: 100%; height: auto; }
+  #nnMap { display: block; width: 100%; max-width: 264px; aspect-ratio: 1; border-radius: 8px; border: 1px solid var(--line); }
+  .nn-edge { stroke-linecap: round; opacity: .85; }
+  .nn-node { fill: var(--surface); stroke: var(--ink-2); stroke-width: 1.5; }
+  .nn-t { font: 600 13px var(--font-mono); fill: var(--ink); text-anchor: middle; }
+  .nn-cap { font: 11px var(--font-body); fill: var(--muted); text-anchor: middle; }
+  .lc-ax { stroke: var(--edge); stroke-width: 1; }
+  .lc-grid { stroke: var(--line); stroke-width: 1; stroke-dasharray: 3 4; }
+  .lc-t { font: 10.5px var(--font-mono); fill: var(--muted); }
+  .lc-line { fill: none; stroke: var(--ink); stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
+  .nn-key { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 13px; color: var(--ink-2); }
+  .nn-key span { display: inline-flex; align-items: center; gap: 7px; }
+  .nn-key i { width: 18px; height: 3px; border-radius: 2px; }
+  .ctl-lab { font-size: 13px; color: var(--muted); align-self: center; }
+  .lm-out { font: 500 clamp(19px, 2.6vw, 25px)/1.4 var(--font-display); min-height: 2.8em; letter-spacing: -.01em; }
+  .lm-p { color: var(--ink-2); }
+  .lm-g { color: var(--accent); }
+  .lm-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; align-items: start; }
+  .lm-in { font: 15px var(--font-body); padding: 8px 10px; border: 1px solid var(--edge); border-radius: 7px; background: var(--canvas); color: var(--ink); min-width: 0; flex: 1 1 220px; max-width: 340px; }
+  .lm-text { font-size: 14px; color: var(--ink-2); line-height: 1.65; margin-top: 10px; max-width: 86ch; }
+
   footer { border-top: 1px solid var(--line); padding-block: 28px 40px; color: var(--muted); font-size: 13.5px; }
   footer .col { gap: 6px; }
   @media (max-width: 600px) {
@@ -599,6 +628,7 @@
       <a href="#world">World map</a>
       <a href="#inside">3D data center</a>
       <a href="#models">Models &amp; money</a>
+      <a href="#training">Training</a>
       <a href="#inference">Inference</a>
       <a href="#environment">Environment</a>
       <a href="#humans">Humans</a>
@@ -733,6 +763,37 @@
         <div class="stat"><span class="v">€32.7B</span><span class="k">ASML's 2025 net sales, up 16%. It is the only maker of EUV scanners</span></div>
         <div class="stat"><span class="v">$250–300k</span><span class="k">Price of one board with eight H100 GPUs, the workhorse of 2024–25</span></div>
       </div>
+
+      <section>
+        <h2>How the chips fit together</h2>
+        <p class="prose">An AI computer is built in layers: chips inside packages, packages on trays, trays in a rack. Step through the three levels to see what each piece does and who makes it.</p>
+        <div class="rk">
+          <div class="dc-main">
+            <div class="ctrlbar">
+              <div class="seg" role="group" aria-label="Zoom level">
+                <button type="button" class="chip" id="rkV1" data-rkview="rack" aria-pressed="true">1 · The rack</button>
+                <button type="button" class="chip" id="rkV2" data-rkview="tray" aria-pressed="false">2 · Inside a tray</button>
+                <button type="button" class="chip" id="rkV3" data-rkview="chip" aria-pressed="false">3 · Inside a GPU</button>
+              </div>
+            </div>
+            <p class="keynote" id="rkIntro"></p>
+            <div class="dc-stage" id="rkStage"></div>
+            <p class="keynote">Drag to rotate, scroll or pinch to zoom. Hover a part to see what it does. Simplified from a 72-GPU liquid-cooled rack, not drawn to scale.</p>
+          </div>
+          <aside class="dc-side">
+            <div class="dc-card" id="rkCard" aria-live="polite"></div>
+            <div class="dc-list" id="rkList"></div>
+          </aside>
+        </div>
+        <h3>One training step through the rack</h3>
+        <ol class="steps">
+          <li><h3>Data arrives</h3><p>The network cards pull a batch of training text from shared storage.</p></li>
+          <li><h3>The CPU prepares it</h3><p>It turns the text into numbers and hands the batch to the GPUs.</p></li>
+          <li><h3>The GPU reads its weights</h3><p>The model's weights sit in the memory stacked beside the GPU logic.</p></li>
+          <li><h3>The GPU does the math</h3><p>It makes a prediction, measures how wrong it was, and works out how to adjust.</p></li>
+          <li><h3>The GPUs compare notes</h3><p>Through the switch trays, all 72 GPUs agree on the adjustment. Then the next batch arrives.</p><a href="#training">See training happen →</a></li>
+        </ol>
+      </section>
 
       <section>
         <div class="chart" id="chart-chips"></div>
@@ -951,9 +1012,115 @@
         <div class="regkey" data-regkey></div>
         <div class="dir" data-dir="data,frontier,openw,inference,assistants,native,enterprise"></div>
       </section>
-      <div class="next"><a href="#inference">Next: who serves the models →</a><a href="#education">Test yourself</a></div>
+      <div class="next"><a href="#training">Next: what training looks like →</a><a href="#education">Test yourself</a></div>
     </div>
   </div>
+  <!-- ═══ Training ═══ -->
+  <div class="view gutter" id="v-training" data-view="training" hidden>
+    <div class="col">
+      <div>
+        <p class="eyebrow">Step 4 · Train the models</p>
+        <h1>What training a model looks like</h1>
+        <p class="lede">A model is a long list of numbers called weights. Training means nudging those numbers, over and over, until the model's guesses stop being wrong. Both models on this page train for real in your browser.</p>
+      </div>
+
+      <section>
+        <h2>The loop behind all of it</h2>
+        <ol class="steps">
+          <li><h3>Guess</h3><p>Show the model an example and let it make a prediction with the weights it has now.</p></li>
+          <li><h3>Measure the error</h3><p>Compare the guess with the right answer. The size of the miss is called the loss.</p></li>
+          <li><h3>Nudge the weights</h3><p>Work out which way each weight should move to shrink the error, and move it a small step.</p></li>
+          <li><h3>Repeat</h3><p>Do it again with new examples. Thousands of small steps add up to a model that works.</p></li>
+        </ol>
+      </section>
+
+      <section>
+        <h2>Watch a small network learn</h2>
+        <p class="prose">This network has 25 weights. Its job is to colour the square so that every dot sits on its own colour. Press Train and watch the lines change as it learns.</p>
+        <div class="figwrap">
+          <div class="ctrlbar">
+            <div class="seg">
+              <button type="button" class="chip" id="nnRun" aria-pressed="false">Train</button>
+              <button type="button" class="chip" id="nnStep">One step</button>
+              <button type="button" class="chip" id="nnReset">Start over</button>
+            </div>
+            <div class="seg" role="group" aria-label="Pattern to learn">
+              <span class="ctl-lab">Pattern</span>
+              <button type="button" class="chip" id="nnS1" data-shape="ring" aria-pressed="true">Ring</button>
+              <button type="button" class="chip" id="nnS2" data-shape="blobs" aria-pressed="false">Two groups</button>
+              <button type="button" class="chip" id="nnS3" data-shape="xor" aria-pressed="false">Four corners</button>
+            </div>
+            <div class="seg" role="group" aria-label="Step size">
+              <span class="ctl-lab">Step size</span>
+              <button type="button" class="chip" id="nnR1" data-rate="slow" aria-pressed="false">Small</button>
+              <button type="button" class="chip" id="nnR2" data-rate="normal" aria-pressed="true">Medium</button>
+              <button type="button" class="chip" id="nnR3" data-rate="fast" aria-pressed="false">Large</button>
+            </div>
+          </div>
+          <div class="nn-grid">
+            <div><h3>The network's weights</h3><svg id="nnNet" role="img" aria-label="A network with two inputs, six hidden units and one output. Line thickness shows the size of each weight."></svg>
+              <div class="nn-key"><span><i style="background:var(--s1)"></i>Pushes toward blue</span><span><i style="background:var(--s2)"></i>Pushes toward orange</span><span>Thicker means stronger</span></div></div>
+            <div><h3>What it predicts</h3><canvas id="nnMap" role="img" aria-label="The square coloured by the network's prediction, with the training dots on top"></canvas></div>
+            <div><h3>Error over time</h3><svg id="nnLoss" role="img" aria-label="Line chart of the error falling as training proceeds"></svg></div>
+          </div>
+          <div class="stats" id="nnStats" aria-live="off"></div>
+          <p class="figcap">Each line is one weight. The network starts with random weights, so its first picture is wrong. A larger step learns faster on a problem this easy. On real models, too large a step makes training unstable.</p>
+        </div>
+      </section>
+
+      <section>
+        <h2>Train a tiny language model</h2>
+        <p class="prose">The same loop can learn language. This model reads 30 short sentences about the AI value chain and learns one skill: given three words, guess the next one. Press Train, then watch it finish the sentence.</p>
+        <div class="figwrap">
+          <div class="ctrlbar">
+            <div class="seg">
+              <button type="button" class="chip" id="lmRun" aria-pressed="false">Train the model</button>
+              <button type="button" class="chip" id="lmReset">Start over</button>
+            </div>
+          </div>
+          <div class="ctrlbar">
+            <span class="ctl-lab">Start a sentence</span>
+            <div class="seg" role="group" aria-label="Sentence starts">
+              <button type="button" class="chip" id="lmP1" data-lmp="a data center needs" aria-pressed="true">a data center needs</button>
+              <button type="button" class="chip" id="lmP2" data-lmp="training makes the" aria-pressed="false">training makes the</button>
+              <button type="button" class="chip" id="lmP3" data-lmp="the clouds pay" aria-pressed="false">the clouds pay</button>
+              <button type="button" class="chip" id="lmP4" data-lmp="a gpu does" aria-pressed="false">a gpu does</button>
+              <button type="button" class="chip" id="lmP5" data-lmp="people pay for" aria-pressed="false">people pay for</button>
+            </div>
+            <input class="lm-in" id="lmPrompt" value="a data center needs" aria-label="Or type your own start" autocomplete="off" spellcheck="false">
+          </div>
+          <p class="lm-out" id="lmOut" aria-live="off"></p>
+          <p class="figcap" id="lmNote"></p>
+          <div class="lm-grid">
+            <div><h3>What it thinks comes next</h3><div class="bars" id="lmTop"></div></div>
+            <div><h3>Error over time</h3><svg id="lmLoss" role="img" aria-label="Line chart of the error falling as the language model trains"></svg></div>
+          </div>
+          <div class="stats" id="lmStats"></div>
+          <details class="tbl"><summary>Show the training text (<span id="lmCount"></span>)</summary><p class="lm-text" id="lmText"></p></details>
+          <p class="figcap">The model looks only at the last three words. It has not understood anything; it has stored which words tend to follow which, in its weights.</p>
+        </div>
+      </section>
+
+      <section>
+        <h2>From this toy to a frontier model</h2>
+        <div class="tblwrap">
+          <table>
+            <thead><tr><th></th><th>The model on this page</th><th>A frontier model</th></tr></thead>
+            <tbody>
+              <tr><td>Weights</td><td>About 5,500</td><td>Hundreds of billions or more; labs rarely publish the number</td></tr>
+              <tr><td>Training text</td><td>About 190 words</td><td>Trillions of words, plus images, audio and code</td></tr>
+              <tr><td>Hardware</td><td>Your phone or laptop</td><td>Hundreds of thousands of chips. Colossus 2 in Memphis holds about 550,000 GPUs</td></tr>
+              <tr><td>Time</td><td>About 10 seconds</td><td>Weeks to months</td></tr>
+              <tr><td>Power</td><td>A few watts</td><td>A campus drawing hundreds of megawatts, up to a gigawatt</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="prose">The loop is the same at both scales. What changes is the size, and that is why the rest of this site exists: the chips, the data centers and the power are all there to run this loop on a model that large.</p>
+      </section>
+      <div class="next"><a href="#chips">How the chips fit together</a><a href="#inference">Next: serving the trained model →</a><a href="#environment">Energy and water</a></div>
+    </div>
+  </div>
+
   <!-- ═══ Inference ═══ -->
   <div class="view gutter" id="v-inference" data-view="inference" hidden>
     <div class="col">
@@ -1335,6 +1502,7 @@
 <script src="env.js"></script>
 <script src="learn.js"></script>
 <script src="bci.js"></script>
+<script src="train.js"></script>
 <script src="inference-data.js"></script>
 <script src="infer.js"></script>
 <script>
@@ -1436,7 +1604,7 @@
   document.getElementById("chokes").innerHTML = VC.stages
     .filter(s => s.choke && s.choke.level >= 3)
     .sort((a, b) => b.choke.level - a.choke.level || a.col - b.col)
-    .map(s => `<div class="choke"><i style="background:var(--c${s.choke.level})"></i><b>${esc(s.title)} · ${LEVELS[s.choke.level]}</b><span>${esc(s.choke.note)}</span></div>`)
+    .map(s => `<div class="chokecard"><i style="background:var(--c${s.choke.level})"></i><b>${esc(s.title)} · ${LEVELS[s.choke.level]}</b><span>${esc(s.choke.note)}</span></div>`)
     .join("");
 
   // ── Company directories (from data.js) ──
@@ -1464,11 +1632,14 @@
     `${VC.research.credit}: the "AI chain value" decks (general, hardware, real estate). ${nRes} of the ${VC.companies.length} companies here have figures from that research; the rest are seed data that hasn't been verified yet.`;
 
   // ── Routing ──
-  const VIEWS = ["overview", "map", "chips", "datacenters", "world", "inside", "models", "inference", "environment", "humans", "bci", "education"];
+  const VIEWS = ["overview", "map", "chips", "datacenters", "world", "inside", "models", "training", "inference", "environment", "humans", "bci", "education"];
   // The 3D model loads three.js only when its page is first opened.
   let dcLoad = null;
   const loadScript = src => new Promise((res, rej) => { const s = document.createElement("script"); s.src = src; s.onload = res; s.onerror = rej; document.body.appendChild(s); });
-  const loadDC = () => dcLoad || (dcLoad = loadScript("https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js").catch(() => {}).then(() => loadScript("dc3d.js")));
+  let threeLoad = null, rackLoad = null;
+  const loadThree = () => threeLoad || (threeLoad = loadScript("https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js").catch(() => {}));
+  const loadDC = () => dcLoad || (dcLoad = loadThree().then(() => loadScript("dc3d.js")));
+  const loadRack = () => rackLoad || (rackLoad = loadThree().then(() => loadScript("rack3d.js")));
   function route() {
     const name = VIEWS.includes(location.hash.slice(1)) ? location.hash.slice(1) : "overview";
     document.querySelectorAll("[data-view]").forEach(v => (v.hidden = v.dataset.view !== name));
@@ -1480,6 +1651,9 @@
     const dcSlot = name === "overview" ? "dcSlotHome" : name === "inside" ? "dcSlotInside" : null;
     if (dcSlot) { document.getElementById(dcSlot).appendChild(document.querySelector(".dc")); loadDC().then(() => requestAnimationFrame(() => window.VCDC && VCDC.mount())); }
     else if (window.VCDC) VCDC.pause();
+    if (name === "chips") loadRack().then(() => requestAnimationFrame(() => window.VCRack && VCRack.mount()));
+    else if (window.VCRack) VCRack.pause();
+    if (name !== "training" && window.VCTrain) VCTrain.pause();
     ctip.hidden = true;
     window.scrollTo(0, 0);
   }
