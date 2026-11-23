@@ -579,6 +579,14 @@
   .rk { display: flex; flex-direction: column; gap: 18px; }
   .rk .dc-list { grid-template-columns: 1fr 1fr; gap: 3px 10px; }
   .rk .dc-card .chip { align-self: flex-start; }
+  .rk-zoom { position: absolute; right: 12px; bottom: 12px; z-index: 3; display: flex; align-items: center; gap: 6px; }
+  .rk-zoom button { font: 500 13px/1 var(--font-body); height: 32px; padding: 0 12px; cursor: pointer; color: var(--ink); background: var(--surface); border: 1px solid var(--edge); border-radius: 8px; box-shadow: 0 1px 2px rgba(0,0,0,.12); }
+  .rk-zoom button:hover:not(:disabled) { border-color: var(--accent); }
+  .rk-zoom button:disabled { opacity: .4; cursor: default; }
+  .rk-zoom span { font: 11px/1 var(--font-mono); color: var(--muted); background: color-mix(in srgb, var(--surface) 80%, transparent); padding: 4px 6px; border-radius: 6px; }
+  .rk-go { border-color: var(--accent); color: var(--ink); background: var(--accent-soft); }
+  #rkGate[aria-pressed="true"] { border-color: var(--c1); }
+  .rk-scale { color: var(--ink-2); font-weight: 600; }
 
   /* Training page */
   .nn-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; align-items: start; }
@@ -766,7 +774,7 @@
 
       <section>
         <h2>How the chips fit together</h2>
-        <p class="prose">An AI computer is built in layers: chips inside packages, packages on trays, trays in a rack. Step through the three levels to see what each piece does and who makes it.</p>
+        <p class="prose">An AI computer is built in layers, each inside the last. Start with the whole rack and keep expanding, down to a single transistor, to see what each piece does and who makes it.</p>
         <div class="rk">
           <div class="dc-main">
             <div class="ctrlbar">
@@ -774,11 +782,15 @@
                 <button type="button" class="chip" id="rkV1" data-rkview="rack" aria-pressed="true">1 · The rack</button>
                 <button type="button" class="chip" id="rkV2" data-rkview="tray" aria-pressed="false">2 · Inside a tray</button>
                 <button type="button" class="chip" id="rkV3" data-rkview="chip" aria-pressed="false">3 · Inside a GPU</button>
+                <button type="button" class="chip" id="rkV4" data-rkview="die" aria-pressed="false">4 · The logic chip</button>
+                <button type="button" class="chip" id="rkV5" data-rkview="wires" aria-pressed="false">5 · The wiring</button>
+                <button type="button" class="chip" id="rkV6" data-rkview="fet" aria-pressed="false">6 · One transistor</button>
               </div>
+              <button type="button" class="chip" id="rkGate" aria-pressed="false" hidden>Gate voltage: off, no current</button>
             </div>
             <p class="keynote" id="rkIntro"></p>
             <div class="dc-stage" id="rkStage"></div>
-            <p class="keynote">Drag to rotate, scroll or pinch to zoom. Hover a part to see what it does. Simplified from a 72-GPU liquid-cooled rack, not drawn to scale.</p>
+            <p class="keynote">Drag to rotate, scroll or pinch to zoom. Hover a part to see what it does; double-click one that opens to look inside it. Simplified, and not drawn to scale.</p>
           </div>
           <aside class="dc-side">
             <div class="dc-card" id="rkCard" aria-live="polite"></div>
@@ -1458,7 +1470,7 @@
           <p><b>These are speculations, not forecasts.</b> They would need fast two-way links with far more bandwidth than exists today, and nobody knows how a brain would adapt to a constant flow of injected information. The article's authors disagree among themselves about how far off this is; one puts direct streaming of senses decades away at least.</p>
         </div>
       </section>
-      <p class="keynote">Adapted from the draft commentary "Brains connecting to the Future" by Dorian Leger and Andrii Buvailo, written for npj Digital Medicine in 2025, and its reviewers' notes. Figures are redrawn from the draft and from the 2025 landscape figure by Dorian Leger. News items were checked by web search on 20 November 2026.</p>
+      <p class="keynote">Adapted from a 2025 draft commentary on brain-computer interfaces and its reviewers' notes. Figures are redrawn from that draft and from a 2025 company landscape figure. News items were checked by web search on 20 November 2026.</p>
       <div class="next"><a href="#humans">Humans: more coming soon</a><a href="#education">Test yourself in Education →</a></div>
     </div>
   </div>

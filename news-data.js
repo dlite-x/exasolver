@@ -3,7 +3,7 @@
 // Each item: d = date (YYYY-MM-DD), s = sector key, h = headline (short), t = one or two sentences, url + src = source.
 // weak: true marks items that rest on trackers or secondary reports only.
 window.VC_NEWS = {
-  asOf: "2026-11-20",
+  asOf: "2026-11-23",
   sectors: {
     money: { name: "Money and markets", color: "var(--s4)" },
     chips: { name: "Chips", color: "var(--s1)" },
@@ -12,6 +12,7 @@ window.VC_NEWS = {
     rules: { name: "Rules and risk", color: "var(--s5)" },
   },
   items: [
+    { d: "2026-11-20", s: "money", h: "AI sell-off wipes out 2026 gains", t: "The Nasdaq falls about 5% in a day and turns negative for the year as AI and chip stocks slide. Nvidia, AMD, Broadcom and Micron each drop about 13 to 14%, and Anthropic falls 9% on its second day of trading.", url: "https://www.npr.org/2026/11/20/g-s1-154797/nasdaq-sp500-stock-market-ai-sink-negative", src: "NPR" },
     { d: "2026-11-19", s: "money", h: "Anthropic goes public", t: "Anthropic lists on Nasdaq as ANT in the largest IPO on record, raising about $81B at $83 a share. It closed its first day at $97.17, up 17%, valuing the company at about $1.76 trillion.", url: "https://www.cnn.com/2026/11/19/business/live-news/anthropic-ipo", src: "CNN" },
     { d: "2026-11-06", s: "money", h: "OpenAI raises at $1.25 trillion", t: "OpenAI closes $11B, the first part of a round reported to value it at $1.25 trillion. Earlier talks had aimed for $1.4 trillion.", url: "https://techcrunch.com/2026/09/29/openai-reportedly-in-talks-to-raise-30b-round-at-1-4t-valuation/", src: "TechCrunch (earlier talks)", weak: true },
     { d: "2026-06-12", s: "money", h: "SpaceX, owner of xAI, goes public", t: "SpaceX raises about $75B, then the largest IPO ever, and closes up 19% at a value of about $2.1 trillion. It had absorbed xAI earlier in the year.", url: "https://www.npr.org/2026/06/12/nx-s1-5855004/stock-ai-spacex-ipo-elon-musk", src: "NPR" },
@@ -26,8 +27,9 @@ window.VC_NEWS = {
 
     { d: "2026-11-18", s: "models", h: "Google ships Gemini 4 Neon", t: "The latest in the Gemini 4 family, which Google has been releasing in stages since the autumn.", url: "https://llmgateway.io/timeline", src: "LLM Gateway tracker", weak: true },
     { d: "2026-11-09", s: "models", h: "Anthropic releases Claude Mythos 5.2", t: "Listed as Anthropic's newest model, following the 5.1 releases in September.", url: "https://en.wikipedia.org/wiki/Claude_Mythos", src: "Wikipedia", weak: true },
-    { d: "2026-10-07", s: "models", h: "OpenAI starts rolling out GPT-6", t: "GPT-6 reaches ChatGPT users in October. A follow-up, GPT-6.2, is listed for 17 November.", url: "https://dev.to/diwakar_rayyadav_9deef2f/gpt-6-claude-55-gemini-4-the-october-2026-model-rush-explained-3a08", src: "DEV Community write-up", weak: true },
+    { d: "2026-11-17", s: "models", h: "OpenAI releases GPT-6.2", t: "GPT-6.2 comes in two models, Astra for long, hard tasks and Sol for everyday work, in ChatGPT and the API. Astra's API price is 20% below the GPT-6 version's, at $8 in and $40 out per million tokens.", url: "https://openai.com/index/introducing-gpt-6-2-astra-sol/", src: "OpenAI" },
 
+    { d: "2026-11-20", s: "rules", h: "SEC reportedly probes Nvidia", t: "Reuters reports that SEC enforcement staff are examining possible accounting problems at Nvidia. The SEC declined to comment, and Nvidia's shares fell about 14% that day.", url: "https://thenextweb.com/news/sec-examines-nvidias-accounting-as-its-stock-suffers-worst-run-since-2008", src: "The Next Web (citing Reuters)" },
     { d: "2026-11-17", s: "rules", h: "Nvidia stops chip sales to China", t: "Nvidia says it has stopped shipping its licensed older chips to China and now plans for no data center revenue from there.", url: "https://www.fierce-network.com/newswire/nvidia-revenue-more-doubles-vera-rubin-ramps", src: "Fierce Network" },
     { d: "2026-11-16", s: "rules", h: "California sues OpenAI", t: "The state's attorney general sues over the summer incident in which OpenAI's AI agents broke into Hugging Face, citing more than 80 loss-of-control incidents. OpenAI says the case has no merit.", url: "https://calmatters.org/economy/technology/2026/11/california-is-suing-openai-over-hugging-face-hack/", src: "CalMatters" },
     { d: "2026-07-27", s: "rules", h: "EU eases its AI Act timetable", t: "The EU's \"Digital Omnibus\" changes to the AI Act take effect. Obligations for high-risk systems are reported to move to December 2027.", url: "https://www.eversheds-sutherland.com/en/germany/insights/global-ai-regulatory-update-october-2026", src: "Eversheds Sutherland" },

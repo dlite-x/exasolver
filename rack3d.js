@@ -1,4 +1,5 @@
-// "Inside an AI rack" on the Chips page: three 3D views (rack, compute tray, GPU package) showing how the chips fit together.
+// "How the chips fit together" on the Chips page: six 3D views, each inside the last (rack, compute tray, GPU package,
+// logic chip, wiring layers, one transistor).
 // Needs three.js r128 (window.THREE) and data.js (window.VC). The layout follows a 72-GPU liquid-cooled rack in outline; it is a schematic.
 window.VCRack = (() => {
   const host = document.getElementById("rkStage"), listEl = document.getElementById("rkList"), card = document.getElementById("rkCard");
@@ -38,13 +39,40 @@ window.VCRack = (() => {
       substrate: { name: "Package substrate", what: "A stiff board under everything, with solder balls underneath that attach it to the tray.", fit: "It fans thousands of tiny connections out to a size a circuit board can use, and brings power in.", stage: "packaging", who: ["Ibiden", "Unimicron", "amkor"] },
       caps: { name: "Capacitors", what: "Tiny components around the edge that smooth out the power supply.", fit: "They hold a small reserve of charge for the instant the chip's demand jumps.", stage: "materials", who: ["Murata", "Samsung Electro-Mechanics"] },
     } },
+    die: { name: "Inside the logic chip", intro: "Under the lid, the logic chip is laid out like a city. Most of it is one block repeated thousands of times.", parts: {
+      cores: { name: "Compute cores", what: "A grid of identical processing units. Each one multiplies and adds long lists of numbers, and thousands of them work at the same moment.", fit: "AI is mostly this one operation repeated. That is why a chip made of many simple units beats one fast, clever processor.", stage: "design", who: ["nvidia", "amd", "broadcom"] },
+      cache: { name: "On-chip memory", what: "Small, very fast memory placed between the blocks of cores.", fit: "It keeps the numbers a core needs next within reach, so the cores are not left waiting.", stage: "design", who: ["nvidia", "synopsys", "cadence"] },
+      memio: { name: "Memory interfaces", what: "Circuits along two edges that talk to the memory stacks beside the chip.", fit: "They move the model's weights in and out fast enough to keep every core busy.", stage: "design", who: ["nvidia", "rambus", "synopsys"] },
+      linkio: { name: "High-speed links", what: "Transmitters and receivers along the other two edges.", fit: "They connect this GPU to the other GPUs in the rack and to the CPU.", stage: "design", who: ["nvidia", "astera", "credo", "broadcom"] },
+      ctrl: { name: "Control and power circuits", what: "The logic that schedules work, watches the temperature and manages power across the chip.", fit: "It slows parts of the chip down when they run too hot.", stage: "design", who: ["nvidia", "synopsys", "cadence"] },
+    } },
+    wires: { name: "The wiring", intro: "Zoom in about ten thousand times. A chip is built in layers: transistors at the bottom, then more than ten layers of copper wiring stacked on top.", parts: {
+      fets: { name: "Transistors", what: "A layer of microscopic switches built into the surface of the silicon. One GPU has tens of billions of them.", fit: "A few transistors wired together make a logic gate. Millions of gates make one compute core.", stage: "foundry", who: ["tsmc", "samsung", "intel"] },
+      local: { name: "Local wires", what: "The lowest wiring layers: copper lines only a few tens of nanometres wide.", fit: "They join neighbouring transistors into logic gates. Printing lines this fine is the job that needs EUV lithography.", stage: "litho", who: ["asml", "tsmc", "amat"] },
+      global: { name: "Upper wires", what: "Thicker copper layers higher up the stack.", fit: "They carry signals across the chip and bring power down to the transistors.", stage: "fabtools", who: ["amat", "lam", "tel"] },
+      vias: { name: "Vias", what: "Vertical plugs of metal that connect one wiring layer to the next.", fit: "Without them each layer would be an isolated sheet of lines. A chip has billions of vias.", stage: "fabtools", who: ["lam", "amat", "tel"] },
+      silicon: { name: "Silicon wafer", what: "The base: a slice of a single silicon crystal, polished almost perfectly flat.", fit: "Everything else is built on top of it, one layer at a time, over about three months.", stage: "materials", who: ["Shin-Etsu", "SUMCO", "GlobalWafers"] },
+    } },
+    fet: { name: "One transistor", intro: "This is the switch everything else is made of. A small voltage on the gate decides whether current can flow. Use the gate button to turn it on.", parts: {
+      gate: { name: "Gate", what: "The control. It sits over the fins like a saddle.", fit: "Put a voltage on the gate and the channel beneath it opens. Take it away and the channel closes. On is a 1 and off is a 0.", stage: "foundry", who: ["tsmc", "samsung", "intel"] },
+      channel: { name: "Channel (fins)", what: "Thin fins of silicon that the current flows through.", fit: "The gate grips each fin on three sides, so it can shut the current off almost completely. The newest chips use stacked ribbons that the gate surrounds entirely.", stage: "foundry", who: ["tsmc", "samsung", "intel"] },
+      source: { name: "Source", what: "Where electrons enter the transistor.", fit: "A metal contact connects it to the wiring above.", stage: "foundry", who: ["tsmc", "samsung", "intel"] },
+      drain: { name: "Drain", what: "Where electrons leave when the transistor is on.", fit: "The next transistor's gate is often wired to this point, so one switch controls another. That is how logic is built.", stage: "foundry", who: ["tsmc", "samsung", "intel"] },
+      oxide: { name: "Gate insulator", what: "A layer only a few atoms thick between the gate and the fins.", fit: "It lets the gate's voltage act on the channel without current leaking into the gate. It is laid down one atomic layer at a time.", stage: "fabtools", who: ["amat", "lam", "tel", "ASM International"] },
+      contacts: { name: "Contacts", what: "Metal plugs that reach up to the first layer of wiring.", fit: "They are how the transistor is connected to its neighbours.", stage: "fabtools", who: ["amat", "lam", "tel"] },
+    } },
   };
-  const ORDER = ["rack", "tray", "chip"];
-  let view = "rack", selected = { rack: "compute", tray: "gpu", chip: "hbm" }, hovered = null, ready = false;
+  const ORDER = ["rack", "tray", "chip", "die", "wires", "fet"];
+  const SCALE = { rack: "About 2.2 metres tall", tray: "About 45 centimetres wide", chip: "About 7 centimetres across", die: "About 3 centimetres across",
+    wires: "About 1 micrometre across, roughly a hundredth of the width of a hair", fet: "About 50 nanometres across, over a thousand times thinner than a hair" };
+  // Which part of each level opens the next level down.
+  const INTO = { rack: { compute: ["tray", "Open a tray"] }, tray: { gpu: ["chip", "Look inside a GPU"] }, chip: { die: ["die", "Look inside the logic chip"] },
+    die: { cores: ["wires", "Zoom into the circuits"] }, wires: { fets: ["fet", "Zoom into one transistor"] } };
+  let view = "rack", selected = { rack: "compute", tray: "gpu", chip: "die", die: "cores", wires: "fets", fet: "gate" }, hovered = null, ready = false;
 
   function drawList() {
     const V = VIEWS[view];
-    document.getElementById("rkIntro").textContent = V.intro;
+    document.getElementById("rkIntro").innerHTML = `${esc(V.intro)} <b class="rk-scale">${esc(SCALE[view])}.</b>`;
     listEl.innerHTML = Object.entries(V.parts).map(([id, p]) => `<button type="button" class="dc-item" data-part="${id}" aria-pressed="${selected[view] === id}"><i class="g-compute"></i>${esc(p.name)}</button>`).join("");
     listEl.querySelectorAll(".dc-item").forEach(b => { b.addEventListener("click", () => select(b.dataset.part)); b.addEventListener("mouseenter", () => setHover(b.dataset.part)); b.addEventListener("mouseleave", () => setHover(null)); });
     document.querySelectorAll("[data-rkview]").forEach(b => b.setAttribute("aria-pressed", b.dataset.rkview === view));
@@ -52,7 +80,7 @@ window.VCRack = (() => {
   function select(id) {
     selected[view] = id; const p = VIEWS[view].parts[id];
     listEl.querySelectorAll(".dc-item").forEach(b => b.setAttribute("aria-pressed", b.dataset.part === id));
-    const next = view === "rack" && id === "compute" ? `<button type="button" class="chip" data-go="tray">Open a tray →</button>` : view === "tray" && id === "gpu" ? `<button type="button" class="chip" data-go="chip">Look inside a GPU →</button>` : "";
+    const into = INTO[view] && INTO[view][id], next = into ? `<button type="button" class="chip rk-go" data-go="${into[0]}">${into[1]} →</button>` : "";
     card.innerHTML = `<p class="eyebrow">${esc(VIEWS[view].name)} · on the chain: ${esc(stageTitle[p.stage] || p.stage)}</p><h3>${esc(p.name)}</h3><p>${esc(p.what)}</p>
       <p><b>How it fits.</b> ${esc(p.fit)}</p><p class="dc-who"><b>Who makes it</b><span>${p.who.map(w => `<em>${esc(coName[w] || w)}</em>`).join("")}</span></p>${next}`;
     const go = card.querySelector("[data-go]"); if (go) go.addEventListener("click", () => setView(go.dataset.go));
@@ -73,7 +101,7 @@ window.VCRack = (() => {
     return { dark, bg: css("--canvas"), floor: dark ? "#1d2228" : "#e3e6ea", steel: dark ? "#5d6671" : "#b9c0c9", frame: dark ? "#3a424c" : "#8b949f", tray: dark ? "#2b3038" : "#3b424c",
       face: dark ? "#4a525d" : "#69727e", sw: dark ? "#274a78" : "#2f65ad", psu: css("--c1"), copper: dark ? "#c98a4b" : "#b87333", cool: css("--s1"), hot: css("--c3"), fibre: css("--s3"),
       led: "#45d08f", pcb: dark ? "#1f5b46" : "#2c7a5c", chip: dark ? "#15181d" : "#23272e", lid: dark ? "#9099a4" : "#c9cfd6", mem: dark ? "#3b4350" : "#566070", plate: dark ? "#5b8fd0" : "#7fb0ea",
-      inter: dark ? "#7c8794" : "#aab3bd", die: dark ? "#b9a26a" : "#d8be7e", hbm: dark ? "#6d5fb0" : "#7a69c9", sub: dark ? "#2a6a4f" : "#3a8a66", gold: "#d4a94a", glass: dark ? "#6f8fb3" : "#9fc0e3", hl: css("--accent") };
+      inter: dark ? "#7c8794" : "#aab3bd", die: dark ? "#b9a26a" : "#d8be7e", hbm: dark ? "#6d5fb0" : "#7a69c9", sub: dark ? "#2a6a4f" : "#3a8a66", gold: "#d4a94a", ox: dark ? "#3d4b5c" : "#cfd9e6", glass: dark ? "#6f8fb3" : "#9fc0e3", hl: css("--accent") };
   }
   let P = palette();
   const scene = new THREE.Scene(), camera = new THREE.PerspectiveCamera(30, 1, 0.5, 2000);
@@ -85,7 +113,8 @@ window.VCRack = (() => {
   Object.assign(sun.shadow.camera, { left: -40, right: 40, top: 40, bottom: -40, near: 5, far: 200 }); sun.shadow.mapSize.set(2048, 2048); sun.shadow.bias = -0.0006; scene.add(sun);
   const floor = new THREE.Mesh(new THREE.CircleGeometry(60, 48), new THREE.MeshStandardMaterial({ roughness: 1 })); floor.rotation.x = -Math.PI / 2; floor.receiveShadow = true; scene.add(floor);
 
-  const groups = { rack: new THREE.Group(), tray: new THREE.Group(), chip: new THREE.Group() }, picks = { rack: [], tray: [], chip: [] }, mats = [];
+  const groups = {}, picks = {}, mats = []; ORDER.forEach(k => { groups[k] = new THREE.Group(); picks[k] = []; });
+  let clockT = 0;
   ORDER.forEach(k => scene.add(groups[k]));
   let cur = "rack"; // view being built
   function mat(part, key, o = {}) {
@@ -169,13 +198,80 @@ window.VCRack = (() => {
     const cap = mat("caps", "gold", { metal: 0.6, rough: 0.4 });
     for (let i = 0; i < 12; i++) { const t = -5 + i * 0.9; box("caps", cap, 0.4, 0.22, 0.25, t, 0.5, 5.3, true); box("caps", cap, 0.4, 0.22, 0.25, t, 0.5, -5.3, true); }
   }
+  // View 4: the logic chip's floorplan. About 21 by 25.
+  cur = "die";
+  {
+    box(null, mat(null, "inter", { metal: 0.4, rough: 0.4 }), 21, 0.4, 25, 0, 0, 0);
+    const core = mat("cores", "die", { metal: 0.4, rough: 0.4 }), cache = mat("cache", "hbm", { rough: 0.5 }), mio = mat("memio", "cool", { rough: 0.5 }), lio = mat("linkio", "fibre", { rough: 0.5 }), ctl = mat("ctrl", "steel", { metal: 0.4 });
+    [-4.7, 4.7].forEach(qx => [-5.6, 5.6].forEach(qz => { for (let i = 0; i < 5; i++) for (let j = 0; j < 5; j++) box("cores", core, 1.3, 0.25, 1.55, qx - 3.2 + i * 1.6, 0.4, qz - 3.7 + j * 1.85); }));
+    box("cache", cache, 0.9, 0.3, 21, 0, 0.4, 0); box("cache", cache, 17.4, 0.3, 0.9, 0, 0.4, 0);
+    box("ctrl", ctl, 2.6, 0.55, 2.6, 0, 0.4, 0);
+    [-9.6, 9.6].forEach(x => [-7.6, -2.6, 2.6, 7.6].forEach(z => box("memio", mio, 1, 0.35, 4.2, x, 0.4, z)));
+    [-11.6, 11.6].forEach(z => [-6.3, -2.1, 2.1, 6.3].forEach(x => box("linkio", lio, 3.4, 0.35, 1, x, 0.4, z)));
+  }
+  // View 5: a slice about one micrometre across: transistors at the bottom, wiring layers above.
+  cur = "wires";
+  {
+    box("silicon", mat("silicon", "inter", { metal: 0.3, rough: 0.5 }), 16, 1.4, 10, 0, 0, 0);
+    const fm = mat("fets", "hot", { rough: 0.5 });
+    for (let i = 0; i < 12; i++) for (let j = 0; j < 5; j++) box("fets", fm, 0.5, 0.4, 1.1, -6.6 + i * 1.2, 1.4, -3.6 + j * 1.8, true);
+    const cu1 = mat("local", "copper", { metal: 0.7, rough: 0.35 }), cu2 = mat("global", "gold", { metal: 0.7, rough: 0.35 }), via = mat("vias", "lid", { metal: 0.7, rough: 0.3 });
+    for (let j = 0; j < 8; j++) box("local", cu1, 15.4, 0.18, 0.3, 0, 2.3, -4.2 + j * 1.2);
+    for (let i = 0; i < 12; i++) box("local", cu1, 0.3, 0.18, 9.4, -6.6 + i * 1.2, 2.95, 0);
+    for (let j = 0; j < 5; j++) box("global", cu2, 15.4, 0.3, 0.6, 0, 3.75, -3.6 + j * 1.8);
+    for (let i = 0; i < 5; i++) box("global", cu2, 0.9, 0.4, 9.4, -6 + i * 3, 4.8, 0);
+    for (let j = 0; j < 2; j++) box("global", cu2, 15.4, 0.6, 1.8, 0, 6, -2.5 + j * 5);
+    for (let i = 0; i < 12; i += 2) for (let j = 0; j < 5; j++) cyl("vias", via, 0.11, 0.5, -6.6 + i * 1.2, 2.05, -3.6 + j * 1.8);
+    for (let i = 1; i < 12; i += 2) for (let j = 0; j < 8; j += 2) cyl("vias", via, 0.12, 0.47, -6.6 + i * 1.2, 2.72, -4.2 + j * 1.2);
+    for (let i = 0; i < 12; i += 3) for (let j = 0; j < 5; j++) cyl("vias", via, 0.16, 0.62, -6.6 + i * 1.2, 3.44, -3.6 + j * 1.8);
+    for (let i = 0; i < 5; i++) for (let j = 0; j < 5; j += 2) cyl("vias", via, 0.22, 0.75, -6 + i * 3, 4.42, -3.6 + j * 1.8);
+    for (let i = 0; i < 5; i++) for (let j = 0; j < 2; j++) cyl("vias", via, 0.3, 0.8, -6 + i * 3, 5.6, -2.5 + j * 5);
+    box(null, mat(null, "glass", { opacity: 0.07, rough: 0.3 }), 16, 5.2, 10, 0, 1.4, 0, true);
+  }
+  // View 6: one fin transistor, about 50 nanometres across. Current runs along the fins from source to drain when the gate is on.
+  cur = "fet";
+  const FINS = [-2.4, 0, 2.4], electrons = [], gateMats = [];
+  let gateOn = false;
+  {
+    box(null, mat(null, "inter", { metal: 0.3, rough: 0.5 }), 16, 1.2, 9, 0, 0, 0);
+    box(null, mat(null, "ox", { rough: 0.7 }), 16, 0.8, 9, 0, 1.2, 0);
+    const fin = mat("channel", "die", { metal: 0.3, rough: 0.4 });
+    FINS.forEach(z => box("channel", fin, 14, 2.4, 0.7, 0, 1.2, z));
+    box("source", mat("source", "cool", { rough: 0.5 }), 3.4, 2.2, 7.2, -5.2, 2, 0); box("drain", mat("drain", "fibre", { rough: 0.5 }), 3.4, 2.2, 7.2, 5.2, 2, 0);
+    const ox = mat("oxide", "hbm", { rough: 0.4 });
+    FINS.forEach(z => box("oxide", ox, 2.7, 1.85, 1.05, 0, 2, z, true));
+    const gm = mat("gate", "steel", { metal: 0.5, rough: 0.4 }); gateMats.push(gm);
+    box("gate", gm, 2.3, 0.9, 8.6, 0, 3.86, 0); [-3.6, -1.2, 1.2, 3.6].forEach(z => box("gate", gm, 2.3, 1.86, z === -3.6 || z === 3.6 ? 1.4 : 1.3, 0, 2, z));
+    const cm = mat("contacts", "lid", { metal: 0.7, rough: 0.3 });
+    cyl("contacts", cm, 0.55, 2.6, -5.2, 5.5, 0); cyl("contacts", cm, 0.55, 2.6, 5.2, 5.5, 0); cyl("contacts", cm, 0.5, 2, 0, 5.76, 3.2);
+    const em = new THREE.MeshBasicMaterial({ color: 0xffd34d, depthTest: false, transparent: true });
+    FINS.forEach((z, f) => { for (let k = 0; k < 7; k++) { const s = new THREE.Mesh(new THREE.SphereGeometry(0.2, 10, 8), em); s.renderOrder = 5; s.userData = { z, ph: k / 7 + f * 0.11 }; s.visible = false; groups.fet.add(s); electrons.push(s); } });
+  }
+  function placeElectrons(t) { electrons.forEach(s => { const u = (s.userData.ph + t * 0.3) % 1; s.position.set(-6.4 + u * 12.8, 3.05, s.userData.z); s.visible = gateOn; }); }
+  const gateBtn = document.getElementById("rkGate");
+  function setGate(on) {
+    gateOn = on; placeElectrons(clockT);
+    if (gateBtn) { gateBtn.setAttribute("aria-pressed", on); gateBtn.textContent = on ? "Gate voltage: on, current flows" : "Gate voltage: off, no current"; }
+    paint();
+  }
+  if (gateBtn) gateBtn.addEventListener("click", () => setGate(!gateOn));
   // Labels
   const ANCH = {
     rack: { compute: [3.3, 16.4, 5], nvswitch: [-3.3, 10.2, 5], power: [3.3, 2, 5], cooling: [-2.7, 21.4, -4.9], spine: [1.6, 18.2, -5], tor: [-3.3, 20.9, 5], frame: [3.3, 21.8, -5] },
     tray: { gpu: [-2.1, 2, -5.5], cpu: [4.2, 1.8, 2.2], cpumem: [-7.2, 1.3, 2.2], dpu: [5, 1.6, 13], ssd: [-5.2, 2, 13], coldplate: [6.3, 2.2, -10.5], vrm: [-6.3, 1.2, -2.6], nvlink: [-6.6, 2, -14.6] },
     chip: { die: [0, 1.5, 0], hbm: [-3.75, 2.4, -1], interposer: [2.6, 1, 3.9], substrate: [5, 0.9, -5.4], caps: [-3, 1, 5.4] },
+    die: { cores: [-4.7, 1.3, -5.6], cache: [0, 1.2, 7], memio: [-9.6, 1.4, 2.6], linkio: [2.1, 1.4, -11.6], ctrl: [0, 1.7, 0] },
+    wires: { fets: [-6.6, 2.4, 4.4], local: [4, 3.4, -4.6], global: [-3, 7, 2.5], vias: [6, 5, 5], silicon: [7.4, 0.9, 5] },
+    fet: { gate: [0, 5.2, -3.4], channel: [-2.6, 3.9, 0], source: [-5.2, 4.6, -2.8], drain: [5.2, 4.6, 2.8], oxide: [0, 2.5, 4.9], contacts: [5.2, 7.2, 0] },
   };
   const labelLayer = document.createElement("div"); labelLayer.className = "dc-labels"; host.appendChild(labelLayer);
+  // In / Out buttons in the corner of the viewer: one level deeper or shallower.
+  const zoomBox = document.createElement("div"); zoomBox.className = "rk-zoom";
+  zoomBox.innerHTML = `<button type="button" id="rkOut" aria-label="Go out one level">− Out</button><span id="rkLvl" aria-live="polite"></span><button type="button" id="rkIn" aria-label="Go in one level">+ In</button>`;
+  host.appendChild(zoomBox);
+  const zOut = zoomBox.querySelector("#rkOut"), zIn = zoomBox.querySelector("#rkIn"), zLvl = zoomBox.querySelector("#rkLvl");
+  zOut.addEventListener("click", () => { const i = ORDER.indexOf(view); if (i > 0) setView(ORDER[i - 1]); });
+  zIn.addEventListener("click", () => { const i = ORDER.indexOf(view); if (i < ORDER.length - 1) setView(ORDER[i + 1]); });
   let labels = [];
   function buildLabels() {
     labelLayer.innerHTML = "";
@@ -185,6 +281,7 @@ window.VCRack = (() => {
   function paint() {
     const hl = new THREE.Color(P.hl), off = new THREE.Color(0);
     mats.forEach(({ m, part, view: v, glow }) => { if (glow) return; const on = v === view && part && (part === hovered || part === selected[view]); m.emissive.copy(on ? hl : off); m.emissiveIntensity = on ? (part === hovered ? 0.55 : 0.3) : 0; });
+    if (gateOn && hovered !== "gate") gateMats.forEach(m => { m.emissive.set(P.psu); m.emissiveIntensity = 0.55; });
     labels.forEach(l => l.b.classList.toggle("on", l.id === hovered || l.id === selected[view]));
     listEl.querySelectorAll(".dc-item").forEach(b => b.classList.toggle("hl", b.dataset.part === hovered));
     cv.style.cursor = hovered ? "pointer" : "grab"; kick();
@@ -198,15 +295,22 @@ window.VCRack = (() => {
   new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
 
   // Camera: one preset per view; drag to orbit, wheel or pinch to zoom.
-  const CAM = { rack: { t: [0, 10.8, 0], theta: 0.62, phi: 1.3, r: 47 }, tray: { t: [0, 0.5, 0], theta: 0.5, phi: 0.82, r: 64 }, chip: { t: [0, 0.6, 0], theta: 0.6, phi: 0.85, r: 30 } };
+  const CAM = { rack: { t: [0, 10.8, 0], theta: 0.62, phi: 1.3, r: 47 }, tray: { t: [0, 0.5, 0], theta: 0.5, phi: 0.82, r: 64 }, chip: { t: [0, 0.6, 0], theta: 0.6, phi: 0.85, r: 30 },
+    die: { t: [0, 0.4, 0], theta: 0.55, phi: 0.8, r: 54 }, wires: { t: [0, 3.2, 0], theta: 0.65, phi: 1.05, r: 34 }, fet: { t: [0, 3, 0], theta: 0.62, phi: 1.0, r: 33 } };
+  let dive = null; // a short zoom-in when a level opens
   const cam = { theta: 0, phi: 1, r: 60 }, target = new THREE.Vector3();
   let userMoved = false, over = false;
   function place() { cam.phi = Math.min(1.5, Math.max(0.2, cam.phi)); cam.r = Math.min(CAM[view].r * 2.2, Math.max(CAM[view].r * 0.3, cam.r));
     camera.position.set(target.x + cam.r * Math.sin(cam.phi) * Math.sin(cam.theta), target.y + cam.r * Math.cos(cam.phi), target.z + cam.r * Math.sin(cam.phi) * Math.cos(cam.theta)); camera.lookAt(target); }
   function setView(v) {
     if (!ready) { view = v; drawList(); select(selected[v]); return; } // no WebGL: the list and card still work
+    const was = ORDER.indexOf(view), now = ORDER.indexOf(v);
     view = v; ORDER.forEach(k => (groups[k].visible = k === v)); floor.position.y = v === "chip" ? -0.4 : 0;
+    zOut.disabled = now === 0; zIn.disabled = now === ORDER.length - 1; zLvl.textContent = `Level ${now + 1} of ${ORDER.length}`;
+    zIn.title = now < ORDER.length - 1 ? `In: ${VIEWS[ORDER[now + 1]].name}` : ""; zOut.title = now > 0 ? `Out: ${VIEWS[ORDER[now - 1]].name}` : "";
     const c = CAM[v]; target.set(...c.t); cam.theta = c.theta; cam.phi = c.phi; cam.r = c.r; userMoved = false; hovered = null;
+    dive = reduce ? null : { t0: performance.now(), from: c.r * (now < was ? 0.55 : 1.9), to: c.r }; if (dive) cam.r = dive.from; // going out starts close and pulls back
+    if (gateBtn) gateBtn.hidden = v !== "fet";
     drawList(); buildLabels(); select(selected[v]); place(); paint();
   }
   const ptrs = new Map(); let moved = false, pinch0 = 0;
@@ -222,12 +326,13 @@ window.VCRack = (() => {
   const up = e => { const was = ptrs.has(e.pointerId); ptrs.delete(e.pointerId); if (ptrs.size < 2) pinch0 = 0; if (was && !moved && e.type === "pointerup") { pick(e); if (hovered) select(hovered); } };
   cv.addEventListener("pointerup", up); cv.addEventListener("pointercancel", up);
   cv.addEventListener("pointerleave", () => { over = false; if (!ptrs.size) { setHover(null); tip.hidden = true; } });
-  cv.addEventListener("wheel", e => { e.preventDefault(); cam.r *= Math.exp(e.deltaY * 0.0012); userMoved = true; place(); kick(); }, { passive: false });
+  cv.addEventListener("dblclick", e => { pick(e); const into = hovered && INTO[view] && INTO[view][hovered]; if (into) setView(into[0]); });
+  cv.addEventListener("wheel", e => { dive = null; e.preventDefault(); cam.r *= Math.exp(e.deltaY * 0.0012); userMoved = true; place(); kick(); }, { passive: false });
   const ray = new THREE.Raycaster(), ndc = new THREE.Vector2();
   function pick(e) {
     const r = cv.getBoundingClientRect(); ndc.set(((e.clientX - r.left) / r.width) * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1); ray.setFromCamera(ndc, camera);
     const hit = ray.intersectObjects(picks[view], false)[0], id = hit ? hit.object.userData.part : null; setHover(id);
-    if (id) { const p = VIEWS[view].parts[id]; tip.innerHTML = `<b>${esc(p.name)}</b>${esc(p.what)}<br><span style="color:var(--muted)">Click for details</span>`; tip.hidden = false; const t = tip.getBoundingClientRect();
+    if (id) { const p = VIEWS[view].parts[id]; tip.innerHTML = `<b>${esc(p.name)}</b>${esc(p.what)}<br><span style="color:var(--muted)">${INTO[view] && INTO[view][id] ? "Double-click to look inside" : "Click for details"}</span>`; tip.hidden = false; const t = tip.getBoundingClientRect();
       tip.style.left = Math.max(8, Math.min(e.clientX + 14, innerWidth - t.width - 8)) + "px"; tip.style.top = Math.max(8, Math.min(e.clientY + 14, innerHeight - t.height - 8)) + "px"; } else tip.hidden = true;
   }
 
@@ -240,6 +345,9 @@ window.VCRack = (() => {
   function frame(now) {
     raf = 0; if (!running) return;
     const dt = last ? Math.min(0.05, (now - last) / 1000) : 0; last = now;
+    clockT += dt;
+    if (dive) { const u = Math.min(1, (now - dive.t0) / 650); cam.r = dive.from + (dive.to - dive.from) * (1 - Math.pow(1 - u, 3)); place(); if (u >= 1) dive = null; }
+    if (view === "fet" && gateOn) placeElectrons(clockT);
     if (!reduce && !userMoved && !over && !ptrs.size) { cam.theta += dt * 0.05; place(); }
     renderer.render(scene, camera);
     const w = host.clientWidth, h = host.clientHeight;
