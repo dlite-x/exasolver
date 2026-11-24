@@ -691,7 +691,7 @@
       <section>
         <h2>Revenue sits upstream</h2>
         <div class="chart" id="chart-overview"></div>
-        <p class="callout">Nvidia's data center business alone brought in <span class="num">$193.7B</span>. That is about ten times the combined 2025 revenue of OpenAI and Anthropic (<span class="num">≈$18.6B</span>).</p>
+        <p class="callout">Nvidia's data center business alone brought in <span class="num">$193.7B</span>. That is about eleven times the combined 2025 revenue of OpenAI and Anthropic (<span class="num">≈$17.7B</span>).</p>
       </section>
 
       <section>
@@ -996,7 +996,7 @@
       <section>
         <h2>Three ways to make money from models</h2>
         <div class="roles">
-          <div class="role"><h3>Sell access</h3><p>OpenAI, Anthropic and Mistral charge per token through APIs and by subscription through their apps.</p><p class="ex">OpenAI ≈$13.1B · Anthropic ≈$5.5B · Mistral ≈$200M</p></div>
+          <div class="role"><h3>Sell access</h3><p>OpenAI, Anthropic and Mistral charge per token through APIs and by subscription through their apps.</p><p class="ex">OpenAI ≈$13.1B · Anthropic $4.6B · Mistral ≈$200M</p></div>
           <div class="role"><h3>Give it away</h3><p>Meta releases Llama for free and earns nothing directly from it. The models support its ads and apps instead.</p><p class="ex">Meta: $0 direct model revenue on $201.0B total</p></div>
           <div class="role"><h3>Build it into products</h3><p>Apple, Microsoft and the enterprise software firms add AI to products people already pay for.</p><p class="ex">Apple: ≈$0.9B from AI software on $416.2B</p></div>
         </div>
@@ -1200,45 +1200,25 @@
       <div>
         <p class="eyebrow">Energy and water</p>
         <h1>What a prompt costs in energy and water</h1>
-        <p class="lede">A typical AI text prompt uses about 0.3 watt-hours in the data center, roughly a laptop running for a minute. The published figures vary a lot because they count different things, so each chart below groups them by what was measured and who measured it.</p>
+        <p class="lede">A typical AI text prompt uses about 0.3 watt-hours in the data center, roughly a laptop running for a minute. That works out to a few joules, and well under a millilitre of cooling water, for each token of the answer. The published figures vary a lot because they count different things, so each chart below groups them by what was measured and who measured it.</p>
       </div>
       <div class="stats">
         <div class="stat"><span class="v">≈0.3 Wh</span><span class="k">Energy for a typical text prompt: Google reports 0.24, Microsoft estimates 0.31, OpenAI says 0.34</span></div>
-        <div class="stat"><span class="v">≈0.3 mL</span><span class="k">Water per prompt reported by Google (0.26 mL, cooling) and OpenAI (0.32 mL)</span></div>
-        <div class="stat"><span class="v">×1,000</span><span class="k">Gap between the lowest and highest published figures for energy per token</span></div>
+        <div class="stat"><span class="v">0.15–3.7 J</span><span class="k">Energy per output token, from a measured open model on one GPU to Microsoft's frontier-scale estimate. That is 0.04–1 Wh per 1,000 tokens; published values span 1,000×</span></div>
+        <div class="stat"><span class="v">≤1 µL</span><span class="k">Cooling water per output token at the data center (≤1 mL per 1,000 tokens). Google and OpenAI report about 0.3 mL per prompt</span></div>
+        
         <div class="stat"><span class="v">6–32×</span><span class="k">Water used to generate the electricity, compared with cooling water at the site</span></div>
       </div>
-
-      <section>
-        <h2>Compared with search and streaming</h2>
-        <p class="prose">Counting only the data center, ten minutes of streaming video uses about as much energy as two typical AI prompts. Counting the screen and the network too, it is about forty. A long reasoning query lands in the same range as the video.</p>
-        <div class="chart">
-          <div class="dp-legend" aria-hidden="true"><span><i class="dp-key k1"></i>AI prompt</span><span><i class="dp-key k0"></i>Something else, for comparison</span><span><i class="dp-key kw"></i>Reported range</span></div>
-          <div class="dp" id="envCompare"></div>
-          <details class="tbl"><summary>Show as a table</summary><div class="tblwrap" id="envCompareTable"></div></details>
-        </div>
-        <p class="keynote">A typical prompt here is 0.3 Wh, the rounded middle of the Google, OpenAI and Microsoft figures. The AI figures cover the data center only. The video figures are the IEA's 2019 estimate for Netflix, split 72% device, 23% network and 5% data center; network energy per gigabyte has fallen since.</p>
-      </section>
-
-      <section>
-        <h2>Your own use</h2>
-        <p class="prose">This is arithmetic on the figures above, not a measurement of any one service.</p>
-        <div class="envbar">
-          <label for="envN">Prompts a day</label>
-          <input type="range" id="envN" min="1" max="300" step="1" value="20">
-          <output id="envNOut" for="envN">20</output>
-          <div class="seg" role="group" aria-label="Kind of prompt">
-            <button type="button" class="chip" id="envK1" data-kind="typical" aria-pressed="true">Typical prompts</button>
-            <button type="button" class="chip" id="envK2" data-kind="long" aria-pressed="false">Long reasoning queries</button>
-          </div>
-        </div>
-        <div class="stats" id="envYou" aria-live="polite"></div>
-      </section>
 
       <section>
         <h2>Energy per output token</h2>
         <p class="prose">Published values span three orders of magnitude. The lowest are GPU-only measurements of open models on current hardware. The highest are outside estimates for reasoning models, where hidden reasoning tokens are charged to the visible ones.</p>
         <div class="envbar" role="group" aria-label="Prompt shape for the third-party estimates">
+          <span>Show figures per</span>
+          <div class="seg" role="group" aria-label="Unit">
+            <button type="button" class="chip" id="envU1" data-unit="tok" aria-pressed="true">Token</button>
+            <button type="button" class="chip" id="envU2" data-unit="k" aria-pressed="false">1,000 tokens</button>
+          </div>
           <span>Prompt shape for the third-party estimates, here and in the water chart</span>
           <div class="seg">
             <button type="button" class="chip" id="envS1" data-size="short" aria-pressed="true">Short · 100 in, 300 out</button>
@@ -1267,6 +1247,33 @@
           <details class="tbl"><summary>Show as a table</summary><div class="tblwrap" id="envWaterTable"></div></details>
         </div>
       </section>
+
+      <section>
+        <h2>Compared with search and streaming</h2>
+        <p class="prose">Counting only the data center, ten minutes of streaming video uses about as much energy as two typical AI prompts. Counting the screen and the network too, it is about forty. A long reasoning query lands in the same range as the video.</p>
+        <div class="chart">
+          <div class="dp-legend" aria-hidden="true"><span><i class="dp-key k1"></i>AI prompt</span><span><i class="dp-key k0"></i>Something else, for comparison</span><span><i class="dp-key kw"></i>Reported range</span></div>
+          <div class="dp" id="envCompare"></div>
+          <details class="tbl"><summary>Show as a table</summary><div class="tblwrap" id="envCompareTable"></div></details>
+        </div>
+        <p class="keynote">A typical prompt here is 0.3 Wh, the rounded middle of the Google, OpenAI and Microsoft figures. The AI figures cover the data center only. The video figures are the IEA's 2019 estimate for Netflix, split 72% device, 23% network and 5% data center; network energy per gigabyte has fallen since.</p>
+      </section>
+
+      <section>
+        <h2>Your own use</h2>
+        <p class="prose">This is arithmetic on the figures above, not a measurement of any one service.</p>
+        <div class="envbar">
+          <label for="envN">Prompts a day</label>
+          <input type="range" id="envN" min="1" max="300" step="1" value="20">
+          <output id="envNOut" for="envN">20</output>
+          <div class="seg" role="group" aria-label="Kind of prompt">
+            <button type="button" class="chip" id="envK1" data-kind="typical" aria-pressed="true">Typical prompts</button>
+            <button type="button" class="chip" id="envK2" data-kind="long" aria-pressed="false">Long reasoning queries</button>
+          </div>
+        </div>
+        <div class="stats" id="envYou" aria-live="polite"></div>
+      </section>
+
 
       <section>
         <h2>The same token at four facilities</h2>
@@ -1493,7 +1500,7 @@
 <footer class="gutter">
   <div class="col">
     <p id="credit"></p>
-    <p>Figures are 2025 or the nearest fiscal year, as reported in the research decks. "≈" marks estimates. Fiscal years differ between companies, so compare them loosely.</p>
+    <p>Figures are 2025 or the nearest fiscal year, as reported in the research decks; TSMC, Google Cloud and Anthropic were corrected to the companies' own filings in November 2026. "≈" marks estimates. Fiscal years differ between companies, so compare them loosely.</p>
   </div>
 </footer>
 
@@ -1530,17 +1537,17 @@
       title: "2025 revenue at points along the chain", note: "US$ billions. Fiscal years vary; Azure is a lower bound.", legend: true,
       rows: [
         ["Nvidia", 215.9, "s1", "FY2026, ending Jan 2026"], ["AWS", 128.7, "s2", "Amazon's cloud segment"],
-        ["TSMC", 119.9, "s1", "Converted from NT$3.8T"], ["Microsoft Azure", 75, "s2", "FY2025, $75B+"],
-        ["Broadcom", 63.8, "s1", "FY2025"], ["Google Cloud", 57.8, "s2", "FY2025"],
+        ["TSMC", 122.4, "s1", "US$, as TSMC reports it (NT$3.81T)"], ["Microsoft Azure", 75, "s2", "FY2025, $75B+"],
+        ["Broadcom", 63.8, "s1", "FY2025"], ["Google Cloud", 58.7, "s2", "FY2025, Alphabet 10-K"],
         ["Micron", 37.4, "s1", "FY2025, ending Aug 2025"], ["OpenAI", 13.1, "s3", "CY2025"],
-        ["Equinix", 9.2, "s2", "FY2025"], ["Anthropic", 5.5, "s3", "CY2025, ≈"],
-        ["CoreWeave", 5.1, "s2", "CY2025"], ["Palantir", 4.5, "s3", "CY2025"],
+        ["Equinix", 9.2, "s2", "FY2025"], ["CoreWeave", 5.1, "s2", "CY2025"],
+        ["Anthropic", 4.6, "s3", "CY2025, audited (IPO prospectus)"], ["Palantir", 4.5, "s3", "CY2025"],
       ],
     },
     "chart-chips": {
       title: "Chip company revenue, 2025", note: "US$ billions. ASML (€32.7B) is left out because it reports in euros.",
       rows: [
-        ["Nvidia", 215.9, "s1", "FY2026, ending Jan 2026"], ["TSMC", 119.9, "s1", "Converted from NT$3.8T"],
+        ["Nvidia", 215.9, "s1", "FY2026, ending Jan 2026"], ["TSMC", 122.4, "s1", "US$, as TSMC reports it (NT$3.81T)"],
         ["Broadcom", 63.8, "s1", "FY2025"], ["Intel", 52.9, "s1", "CY2025"], ["Micron", 37.4, "s1", "FY2025"],
         ["SanDisk", 8.9, "s1", "CY2025"], ["YMTC", 8.8, "s1", "FY2025, as stated in the deck"],
         ["GlobalFoundries", 6.8, "s1", "FY2025"], ["Cambricon", 0.91, "s1", "≈, up 453%"],
@@ -1551,7 +1558,7 @@
       title: "Cloud revenue, 2025", note: "US$ billions. Oracle shows infrastructure (IaaS) only; Azure is a lower bound.",
       rows: [
         ["AWS", 128.7, "s2", "Up 20%"], ["Microsoft Azure", 75, "s2", "FY2025, $75B+, up 34%"],
-        ["Google Cloud", 57.8, "s2", "FY2025"], ["Oracle OCI", 13.1, "s2", "IaaS, up 50%+"],
+        ["Google Cloud", 58.7, "s2", "FY2025, Alphabet 10-K"], ["Oracle OCI", 13.1, "s2", "IaaS, up 50%+"],
         ["CoreWeave", 5.1, "s2", "GPU-specialist cloud"], ["OVHcloud", 1.17, "s2", "€1.08B, converted in the deck"],
       ],
     },
@@ -1565,7 +1572,7 @@
     "chart-labs": {
       title: "Model lab revenue, 2025", note: "US$ billions. Calendar 2025, ≈ estimates where the deck says so.",
       rows: [
-        ["OpenAI", 13.1, "s3", "Exit run-rate ≈$20B"], ["Anthropic", 5.5, "s3", "Run-rate $1B → $9B"],
+        ["OpenAI", 13.1, "s3", "Exit run-rate ≈$20B"], ["Anthropic", 4.6, "s3", "Audited, IPO prospectus"],
         ["xAI", 0.5, "s3", "Standalone, ≈"], ["Mistral AI", 0.2, "s3", "≈"],
         ["Cohere", 0.18, "s3", "$240M ARR at year end"], ["Zhipu AI", 0.105, "s3", "Up 132%"],
       ],

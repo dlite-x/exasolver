@@ -54,6 +54,8 @@ body.companies .legend.reg, body.choke .legend.chk, body.money .legend.mon { dis
 body.money .edge { stroke: var(--money); opacity: .55; marker-end: url(#ah-money); stroke-dasharray: 3 6; animation: flow 1.4s linear infinite; }
 body.money .edge.hi { opacity: 1; stroke-width: 2.2; }
 .edge.dim, body.money .edge.dim { opacity: .1; }
+body:not(.money) .edge.monly, body:not(.money) .elabel.monly { display: none; }
+body.money .edge.nopay { stroke: var(--edge); opacity: .3; marker-end: none; stroke-dasharray: 1 5; animation: none; }
 @keyframes flow { to { stroke-dashoffset: -20; } }
 @media (prefers-reduced-motion: reduce) { .edge, body.money .edge, .edge.hi { animation: none; } }
 

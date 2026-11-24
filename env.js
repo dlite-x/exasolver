@@ -32,7 +32,7 @@
     { name: "DeepSeek-R1 on DeepSeek's servers", host: "ds", reasoning: true, wh: { short: [19.251, 9.449], medium: [24.596, 9.4], long: [29.078, 9.725] } },
   ];
   const ASSUMED = 300, J_PER_WH = 3600, PROMPT = 0.3;
-  const sig = v => v >= 100 ? String(Math.round(v / 10) * 10) : v >= 10 ? String(Math.round(v)) : v >= 1 ? v.toFixed(1) : v.toFixed(2);
+  const sig = v => v >= 100 ? String(Math.round(v / 10) * 10) : v >= 10 ? String(Math.round(v)) : v >= 1 ? v.toFixed(1) : v >= 0.1 || v === 0 ? v.toFixed(2) : v.toPrecision(2);
   const n = v => v.toLocaleString("en-US");
 
   function energyGroups(size) {
@@ -176,10 +176,29 @@
 
   // ── Controls ──
   let size = "short";
+  // Per token, or per 1,000 tokens. 1 J per token = 1 kJ per 1,000 tokens = 0.28 Wh per 1,000 tokens;
+  // 1 µL per token = 1 mL per 1,000 tokens, so the water numbers stay the same and only the unit changes.
+  let unit = "tok";
+  function rescale(groups, f, note) {
+    return groups.map(g => ({ ...g, rows: g.rows.map(r => {
+      const o = { ...r, v: r.v * f, lo: r.lo == null ? null : r.lo * f, hi: r.hi == null ? null : r.hi * f };
+      if (r.text) { const pre = (r.text.match(/^(~|≤ )/) || [""])[0]; o.text = !pre && r.text.includes("–") && o.lo != null ? `${sig(o.lo)}–${sig(o.hi)}` : pre + sig(o.v); }
+      if (note) o.basis = `${r.basis} ${note}`;
+      return o;
+    }) }));
+  }
   const drawTop = () => {
-    renderDots("envEnergy", "envEnergyTable", energyGroups(size), "J/token", "joules per output token, log scale", [0.1, 1000], [0.1, 1, 10, 100, 1000]);
-    renderDots("envWater", "envWaterTable", waterGroups(size), "µL/token", "microlitres per output token, log scale", [0.1, 1000], [0.1, 1, 10, 100, 1000]);
+    if (unit === "k") {
+      renderDots("envEnergy", "envEnergyTable", rescale(energyGroups(size), 1 / 3.6, "Per 1,000 tokens: J per token ÷ 3.6 = Wh per 1,000 tokens."), "Wh per 1k tokens", "watt-hours per 1,000 output tokens, log scale", [0.01, 100], [0.01, 0.1, 1, 10, 100]);
+      renderDots("envWater", "envWaterTable", rescale(waterGroups(size), 1, "Per 1,000 tokens: µL per token = mL per 1,000 tokens."), "mL per 1k tokens", "millilitres per 1,000 output tokens, log scale", [0.1, 1000], [0.1, 1, 10, 100, 1000]);
+    } else {
+      renderDots("envEnergy", "envEnergyTable", energyGroups(size), "J/token", "joules per output token, log scale", [0.1, 1000], [0.1, 1, 10, 100, 1000]);
+      renderDots("envWater", "envWaterTable", waterGroups(size), "µL/token", "microlitres per output token, log scale", [0.1, 1000], [0.1, 1, 10, 100, 1000]);
+    }
   };
+  document.querySelectorAll("[data-unit]").forEach(b => b.addEventListener("click", () => {
+    unit = b.dataset.unit; document.querySelectorAll("[data-unit]").forEach(x => x.setAttribute("aria-pressed", x.dataset.unit === unit)); drawTop();
+  }));
   document.querySelectorAll("[data-size]").forEach(b => b.addEventListener("click", () => {
     size = b.dataset.size; document.querySelectorAll("[data-size]").forEach(x => x.setAttribute("aria-pressed", x === b)); drawTop();
   }));

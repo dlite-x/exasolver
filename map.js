@@ -18,8 +18,15 @@ window.VCMap = (() => {
   }));
   stages.forEach(s => s.cos.sort((a, b) => regionOrder.indexOf(a.region) - regionOrder.indexOf(b.region) || a.name.localeCompare(b.name)));
 
-  const fwd = {}, rev = {};
-  edges.forEach(e => { (fwd[e.from] ??= []).push(e.to); (rev[e.to] ??= []).push(e.from); });
+  // An edge can be goods-only (pay: "none" in money mode), money-only (only: "money"), or paid by its first stage (pay: "from").
+  const shown = e => (st.money ? e.pay !== "none" : e.only !== "money");
+  const payer = e => (e.pay === "from" ? e.from : e.to), payee = e => (e.pay === "from" ? e.to : e.from);
+  const graphs = {};
+  const graph = () => {
+    const k = st.money ? "money" : "goods";
+    if (!graphs[k]) { const fwd = {}, rev = {}; edges.filter(shown).forEach(e => { (fwd[e.from] ??= []).push(e.to); (rev[e.to] ??= []).push(e.from); }); graphs[k] = { fwd, rev }; }
+    return graphs[k];
+  };
   const reach = (id, g) => { const seen = new Set(), q = [id]; while (q.length) for (const m of g[q.pop()] || []) if (!seen.has(m)) { seen.add(m); q.push(m); } return seen; };
 
   const $ = s => document.querySelector(s);
@@ -53,8 +60,8 @@ window.VCMap = (() => {
     const out = {}, inn = {};
     edges.forEach((e, i) => {
       const a = byId[e.from], b = byId[e.to];
-      e.vertical = a.col === b.col;
-      if (e.vertical) return;
+      e.vertical = a.col === b.col && !e.side;
+      if (e.vertical || e.side || (e.only === "money" && !st.money)) return;
       (out[e.from] ??= []).push(i); (inn[e.to] ??= []).push(i);
     });
     const spread = (list, node, other) => {
@@ -71,16 +78,23 @@ window.VCMap = (() => {
   }
 
   function edgeD(e) {
+    if (!shown(e) && e.only === "money") return ""; // money-only wires have no ports in the goods view
     const a = byId[e.from], b = byId[e.to];
     let p1, p2, d;
+    const flip = st.money && e.pay !== "from";
+    if (e.side) { // same column, routed round the right-hand side so it doesn't cross the stage between
+      p1 = [a.x + a.w, a.cy]; p2 = [b.x + b.w + 2, b.cy];
+      if (flip) [p1, p2] = [[p2[0] - 2, p2[1]], [p1[0] + 2, p1[1]]];
+      return `M${p1[0]},${p1[1]} C${p1[0] + 34},${p1[1]} ${p2[0] + 34},${p2[1]} ${p2[0]},${p2[1]}`;
+    }
     if (e.vertical) {
       p1 = [a.x + a.w / 2, a.y + a.h]; p2 = [b.x + b.w / 2, b.y - 2];
-      if (st.money) [p1, p2] = [[p2[0], p2[1] + 2], [p1[0], p1[1] + 2]];
+      if (flip) [p1, p2] = [[p2[0], p2[1] + 2], [p1[0], p1[1] + 2]];
       const my = (p1[1] + p2[1]) / 2;
       d = `M${p1[0]},${p1[1]} C${p1[0]},${my} ${p2[0]},${my} ${p2[0]},${p2[1]}`;
     } else {
       p1 = [a.x + a.w, e.sy]; p2 = [b.x - 2, e.ty];
-      if (st.money) [p1, p2] = [[p2[0] + 2, p2[1]], [p1[0] + 2, p1[1]]];
+      if (flip) [p1, p2] = [[p2[0] + 2, p2[1]], [p1[0] + 2, p1[1]]];
       const mx = (p1[0] + p2[0]) / 2;
       d = `M${p1[0]},${p1[1]} C${mx},${p1[1]} ${mx},${p2[1]} ${p2[0]},${p2[1]}`;
     }
@@ -120,10 +134,12 @@ window.VCMap = (() => {
 
     // Edges
     const eg = el("g", {}, svg), lg = el("g", {}, svg);
-    edgeEls = edges.map(e => el("path", { class: "edge", d: edgeD(e) }, eg));
+    const kind = e => (e.pay === "none" ? " nopay" : "") + (e.only === "money" ? " monly" : "");
+    edgeEls = edges.map(e => el("path", { class: "edge" + kind(e), d: edgeD(e) }, eg));
     labelEls = edges.map((e, i) => {
+      const g = el("g", { class: "elabel" + kind(e) }, lg);
+      if (!edgeEls[i].getAttribute("d")) return g; // hidden wire: an empty label keeps the indexes aligned
       const path = edgeEls[i], L = path.getTotalLength(), p = path.getPointAtLength(L / 2);
-      const g = el("g", { class: "elabel" }, lg);
       const r = el("rect", { rx: 5 }, g);
       const t = el("text", { x: p.x, y: p.y + 3.5, "text-anchor": "middle" }, g);
       t.textContent = st.money ? e.money : e.goods;
@@ -195,10 +211,11 @@ window.VCMap = (() => {
     if (co) {
       nodeOn = new Set(Object.keys(coById[co].at));
     } else if (n) {
-      const up = reach(n, rev), down = reach(n, fwd);
+      const { fwd, rev } = graph(), up = reach(n, rev), down = reach(n, fwd);
       nodeOn = new Set([n, ...up, ...down]);
       const U = new Set([n, ...up]), D = new Set([n, ...down]);
       edges.forEach((e, i) => {
+        if (!shown(e)) return;
         if ((U.has(e.from) && U.has(e.to)) || (D.has(e.from) && D.has(e.to))) edgeOn.add(i);
         if (e.from === n || e.to === n) direct.add(i);
       });
@@ -256,7 +273,9 @@ window.VCMap = (() => {
   const stageButton = (s, label) => `<button class="link" data-stage="${s.id}"><span>${esc(s.title)}</span><small>${esc(label)}</small></button>`;
 
   function stagePanel(s) {
-    const ins = edges.filter(e => e.to === s.id), outs = edges.filter(e => e.from === s.id);
+    // In money mode, "Pays" lists who this stage pays, and "Gets paid by" who pays it.
+    const ins = st.money ? edges.filter(e => shown(e) && payer(e) === s.id).map(e => ({ ...e, from: payee(e) })) : edges.filter(e => shown(e) && e.to === s.id);
+    const outs = st.money ? edges.filter(e => shown(e) && payee(e) === s.id).map(e => ({ ...e, to: payer(e) })) : edges.filter(e => shown(e) && e.from === s.id);
     const lab = e => (st.money ? e.money : e.goods);
     const lv = s.choke ? s.choke.level : null;
     panel.innerHTML = `
@@ -296,7 +315,7 @@ window.VCMap = (() => {
       <ul>
         <li><b>Companies</b>: dots are companies, colored by where they're headquartered. Hover one to see what it does and where else it appears. Companies that show up in many stages are vertically integrated.</li>
         <li><b>Chokepoints</b>: where one or a few suppliers, or a physical limit like grid power, constrain everything downstream.</li>
-        <li><b>Follow the money</b>: flips the wires. Money starts with end users and flows back upstream. Each stage's spending is the next stage's revenue.</li>
+        <li><b>Follow the money</b>: flips the wires. Money starts with end users and flows back upstream. Each stage's spending is the next stage's revenue. On the chip side the money skips stages: the chip designer pays the foundry, the memory makers and the packagers directly, and buyers pay the designer for the finished chips.</li>
       </ul>
       <h3>Try</h3>
       <ul>

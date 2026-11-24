@@ -98,7 +98,7 @@
         { q: "A typical prompt uses 0.3 Wh. How many megawatt-hours do one billion prompts use?", ans: 300, tol: 0.02, unit: "MWh", work: "0.3 Wh × 1,000,000,000 = 300,000,000 Wh = 300 MWh. A 1 GW campus uses that in 18 minutes." },
         { q: "A model uses 1 joule per token. How many kilowatt-hours is that per million tokens?", ans: 0.278, tol: 0.03, unit: "kWh", work: "1,000,000 J ÷ 3,600,000 J per kWh = 0.278 kWh." },
         { q: "At 1 J per token, a site evaporates 1.15 litres per kWh (Google's fleet figure). How many microlitres of cooling water is that per token?", ans: 0.319, tol: 0.05, unit: "µL", work: "µL per token = J per token × L/kWh ÷ 3.6 = 1 × 1.15 ÷ 3.6 ≈ 0.32 µL." },
-        { q: "Nvidia's data center revenue was $193.7B. OpenAI and Anthropic together made about $18.6B. How many times bigger is Nvidia's figure?", ans: 10.4, tol: 0.05, unit: "times", work: "193.7 ÷ 18.6 ≈ 10.4. So far the chip seller has earned far more than the model makers." },
+        { q: "Nvidia's data center revenue was $193.7B. OpenAI and Anthropic together made about $17.7B. How many times bigger is Nvidia's figure?", ans: 10.9, tol: 0.05, unit: "times", work: "193.7 ÷ 17.7 ≈ 10.9. So far the chip seller has earned far more than the model makers." },
       ] },
       { id: "a-quiz", type: "quiz", title: "Chokepoints and deals", topic: "Questions", qs: [
         { q: "Which two stages does the map mark as a single point of failure?", opts: ["EUV lithography and leading-edge foundry", "Servers and networking", "Frontier labs and assistants", "Construction and developers"], why: "ASML is the only EUV supplier and TSMC makes nearly all leading AI chips.", link: "#map" },

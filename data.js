@@ -115,16 +115,23 @@ window.VC = {
   // goods: what physically or digitally flows downstream · money: what flows back
   edges: [
     { from: "eda", to: "design", goods: "design software & IP", money: "licenses, royalties" },
-    { from: "design", to: "foundry", goods: "chip designs (tape-out)", money: "wafer orders" },
+    // pay: "from" = the first stage pays the second (money runs the same way as the wire).
+    // pay: "none" = no money changes hands along this wire. only: "money" = drawn only in Follow the money.
+    // On the chip side the designer pays the foundry, the memory makers and the packagers directly,
+    // and server makers and clouds buy the finished GPUs from the designer (e.g. Nvidia's 10-K, FY2026).
+    { from: "design", to: "foundry", goods: "chip designs (tape-out)", money: "wafers & CoWoS packaging", pay: "from" },
     { from: "materials", to: "foundry", goods: "wafers, gases, resists", money: "materials spend" },
     { from: "materials", to: "memory", goods: "wafers, chemicals", money: "materials spend" },
     { from: "litho", to: "foundry", goods: "EUV & DUV scanners", money: "tool capex" },
     { from: "litho", to: "memory", goods: "scanners", money: "tool capex" },
     { from: "fabtools", to: "foundry", goods: "process tools", money: "tool capex" },
     { from: "fabtools", to: "memory", goods: "process tools", money: "tool capex" },
-    { from: "foundry", to: "packaging", goods: "logic dies", money: "chip purchases" },
-    { from: "memory", to: "packaging", goods: "HBM stacks", money: "HBM contracts" },
-    { from: "packaging", to: "servers", goods: "packaged accelerators", money: "GPU / ASIC purchases" },
+    { from: "foundry", to: "packaging", goods: "logic dies", money: "none: the designer owns the dies", pay: "none" },
+    { from: "memory", to: "packaging", goods: "HBM stacks", money: "none: the designer buys the HBM", pay: "none" },
+    { from: "packaging", to: "servers", goods: "packaged accelerators", money: "none: GPUs are bought from the designer", pay: "none" },
+    { from: "design", to: "memory", goods: "", money: "HBM purchases", pay: "from", only: "money", side: true },
+    { from: "design", to: "packaging", goods: "", money: "assembly & test fees", pay: "from", only: "money" },
+    { from: "design", to: "servers", goods: "", money: "GPU / ASIC purchases", only: "money" },
     { from: "servers", to: "hyperscalers", goods: "AI servers & racks", money: "server capex" },
     { from: "servers", to: "neoclouds", goods: "AI servers & racks", money: "server capex" },
     { from: "network", to: "hyperscalers", goods: "switches, NICs, optics", money: "network capex" },
@@ -305,22 +312,22 @@ window.VC = {
 };
 
 // ════════════════════════════════════════════════════════════════
-// From the Cx Bio research decks by Ievgen & Aleyna ("AI chain value":
+// From the Cx Bio research decks by Ievgen & Dorian ("AI chain value":
 // general, hardware, real estate). Text copies live in research/.
 // Figures are as stated in the decks; "est." marks the decks' own estimates.
 // ════════════════════════════════════════════════════════════════
 window.VC.research = {
-  credit: "Research by Ievgen and Aleyna (Cx Bio)",
+  credit: "Research by Ievgen and Dorian (Cx Bio)",
   decks: ["AI chain value (general)", "AI chain value (hardware)", "AI chain value (real estate)"],
 };
 
 // Revenue facts for companies already on the map.
 window.VC.facts = {
   openai: "2025 revenue ≈$13.1B; exit run-rate ≈$20B",
-  anthropic: "2025 revenue ≈$5.5B; run-rate grew $1B → $9B during 2025",
+  anthropic: "2025 revenue $4.6B (audited, IPO prospectus, Nov 2026)",
   xai: "2025 revenue ≈$0.5B; ≈$3.8B ARR including X",
   amazon: "AWS 2025 revenue $128.7B (+20%)",
-  google: "Alphabet 2025 revenue $402.8B; Google Cloud $57.8B",
+  google: "Alphabet 2025 revenue $402.8B; Google Cloud $58.7B (10-K)",
   microsoft: "FY2025 revenue $281.7B; Azure $75B+ (+34%)",
   meta: "2025 revenue $201.0B; no direct model revenue (Llama is free)",
   oracle: "2025 revenue $57.4B; OCI infrastructure $13.1B (+50%)",
@@ -330,7 +337,7 @@ window.VC.facts = {
   broadcom: "FY2025 revenue $63.8B",
   marvell: "Data center is over 75% of revenue",
   cerebras: "2025 revenue $510M (+76%)",
-  tsmc: "2025 revenue ≈$119.9B",
+  tsmc: "2025 revenue US$122.4B (TSMC's own US$ figure)",
   asml: "2025 net sales €32.7B (+16%)",
   gf: "2025 revenue $6.8B",
   astera: "2025 revenue $853M",
